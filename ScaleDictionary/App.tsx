@@ -1,15 +1,19 @@
 import * as React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Welcome from './screens/Welcome.js';
-import Interface from './screens/Interface.js';
+import Welcome from './screens/Welcome';
+import Interface from './screens/Interface';
 import { registerRootComponent } from 'expo';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  Welcome: undefined;
+  Interface: undefined;
+};
 
-function App() {
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
@@ -20,15 +24,5 @@ function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    color: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 registerRootComponent(App);
-export default App;
