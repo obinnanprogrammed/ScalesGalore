@@ -3,6 +3,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import MusicNotation from './MusicNotation';
+import { majorScales } from './scales';
 
 type RootStackParamList = {
     Welcome: undefined;
@@ -51,7 +52,7 @@ export default function Interface() {
                 setNote("");
                 setMode("");
             }} />
-            <MusicNotation />
+            {submitted && <MusicNotation clef="bass" notes={majorScales[note + " " + mode]} />}
             <Button title="Return Home" onPress={() => {navigation.navigate("Welcome")}} />
         </View>
     )
