@@ -16,16 +16,18 @@ export const majorScales: Record<string, string[]> = {
 }
 
 export const minorScales: Record<string, string[]> = {
-    "E Minor": [],
-    "F Minor": [],
-    "F# Minor": [],
-    "G Minor": [],
-    "G# Minor": [],
-    "A Minor": [],
-    "Bb Minor": [],
-    "B Minor": [],
-    "C Minor": [],
-    "C# Minor": [],
-    "D Minor": [],
-    "Eb Minor": []
+    "E Minor": ["E", "F#", "G", "A", "B", "C", "D", "E"],
+    "F Minor": ["F", "G", "Ab", "Bb", "C", "Db", "Eb", "F"],
+    "F# Minor": ["F#", "G#", "A", "B", "C#", "D", "E", "F#"],
+    "G Minor": ["G", "A", "Bb", "C", "D", "Eb", "F", "G"],
+    "G# Minor": ["G#", "A#", "B", "C#", "D#", "E", "F#", "G#"],
+    "Ab Minor": ["Ab", "Bb", "Cb", "Db", "Eb", "Fb", "Gb", "Ab"],
+    "A Minor": ["A", "B", "C", "D", "E", "F", "G", "A"],
+    "Bb Minor": ["Bb", "C", "Db", "Eb", "F", "Gb", "Ab", "Bb"],
+    "B Minor": ["B", "C#", "D", "E", "F#", "G", "A", "B"],
+    "C Minor": ["C", "D", "Eb", "F", "G", "Ab", "Bb", "C"],
+    "C# Minor": ["C#", "D#", "E", "F#", "G#", "A", "B", "C#"],
+    "D Minor": ["D", "E", "F", "G", "A", "Bb", "C", "D"],
+    "D# Minor": ["D#", "E#", "F#", "G#", "A#", "B", "C#", "D#"],
+    "Eb Minor": ["Eb", "F", "Gb", "Ab", "Bb", "Cb", "Db", "Eb"]
 }

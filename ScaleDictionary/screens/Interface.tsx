@@ -3,7 +3,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import MusicNotation from './MusicNotation';
-import { majorScales } from './scales';
+import { majorScales, minorScales } from './scales';
 
 type RootStackParamList = {
     Welcome: undefined;
@@ -17,6 +17,7 @@ export default function Interface() {
     const [note, setNote] = useState("");
     const [mode, setMode] = useState("");
     const [submitted, setSubmitted] = useState(false);
+    const [scaleNotes, setScaleNotes] = useState<string[]>([]);
     type Data = "label" | "value";
     const notes: Record<Data, string>[] = [
         { label: "E", value: "E" }, 
@@ -43,26 +44,38 @@ export default function Interface() {
     ]
     return (
         <View style={styles.container}>
-            <Text>This interface is so mid.</Text>
+            <Text>Pick your scale here!</Text>
+            <Text>Click the reeset button to generate a different scale.</Text>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
             data={notes} placeholder="Select note...." value={note} onChange={item => setNote(item.value)}>
             </Dropdown>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
             data={modes} placeholder="Select mode...." value={mode} onChange={item => setMode(item.value)}>
             </Dropdown>
-            <Button title="Submit" onPress={() => setSubmitted(true)} />
+            <Button title="Submit" onPress={() => {
+              setSubmitted(true);
+              if(mode === "Major") {
+                if((note + " " + mode) in majorScales) {
+                  setScaleNotes(majorScales[note + " " + mode]);
+                }
+              } else if(mode === "Minor") {
+                if((note + " " + mode) in minorScales) {
+                  setScaleNotes(minorScales[note + " " + mode]);
+                }
+              }
+            }} />
             {submitted && <Text>{note + " " + mode}</Text>}
             
             {submitted && 
             <View>
-                {(note + " " + mode) in majorScales ? 
-                <MusicNotation clef="bass" notes={majorScales[note + " " + mode]} /> 
-                : <Text>This scale is impractical!</Text>}
+                {scaleNotes.length === 0 ? <Text>This scale is impractical!</Text>
+                : <MusicNotation clef="bass" notes={scaleNotes} /> }
               </View>}
             <Button title="Reset" onPress={() => {
                 setSubmitted(false);
                 setNote("");
                 setMode("");
+                setScaleNotes([]);
             }} />
             <Button title="Return Home" onPress={() => {navigation.navigate("Welcome")}} />
         </View>
