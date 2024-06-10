@@ -21,16 +21,21 @@ export default function Interface() {
     const notes: Record<Data, string>[] = [
         { label: "E", value: "E" }, 
         { label: "F", value: "F" }, 
-        { label: "F#/Gb", value: "F#/Gb" }, 
+        { label: "F#", value: "F#" },
+        { label: "Gb", value: "Gb" }, 
         { label: "G", value: "G" }, 
-        { label: "G#/Ab", value: "G#/Ab" }, 
+        { label: "G#", value: "G#" }, 
+        { label: "Ab", value: "Ab" },
         { label: "A", value: "A" }, 
-        { label: "A#/Bb", value: "A#/Bb" }, 
+        { label: "A#", value: "A#" },
+        { label: "Bb", value: "Bb" },
         { label: "B", value: "B" }, 
         { label: "C", value: "C" }, 
-        { label: "C#/Db", value: "C#/Db" }, 
+        { label: "C#", value: "C#" },
+        { label: "Db", value: "Db" }, 
         { label: "D", value: "D" }, 
-        { label: "D#/Eb", value: "D#/Eb" }
+        { label: "D#", value: "D#" },
+        { label: "Eb", value: "Eb" }
     ];
     const modes: Record<Data, string>[] = [
         { label: "Major", value: "Major" }, 
@@ -47,12 +52,18 @@ export default function Interface() {
             </Dropdown>
             <Button title="Submit" onPress={() => setSubmitted(true)} />
             {submitted && <Text>{note + " " + mode}</Text>}
+            
+            {submitted && 
+            <View>
+                {(note + " " + mode) in majorScales ? 
+                <MusicNotation clef="bass" notes={majorScales[note + " " + mode]} /> 
+                : <Text>This scale is impractical!</Text>}
+              </View>}
             <Button title="Reset" onPress={() => {
                 setSubmitted(false);
                 setNote("");
                 setMode("");
             }} />
-            {submitted && <MusicNotation clef="bass" notes={majorScales[note + " " + mode]} />}
             <Button title="Return Home" onPress={() => {navigation.navigate("Welcome")}} />
         </View>
     )
