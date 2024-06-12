@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { View, Text, StyleSheet, Button } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import MusicNotation from './MusicNotation';
@@ -7,17 +7,22 @@ import { majorScales, minorScales } from './scales';
 
 type RootStackParamList = {
     Welcome: undefined;
-    Interface: undefined;
+    Interface: { clef: string };
 };
 type InterfaceScreenNavigationProp = NavigationProp<RootStackParamList, 'Interface'>;
+type InterfaceScreenRouteProp = RouteProp<RootStackParamList, 'Interface'>;
 
-export default function Interface() {
-    const navigation = useNavigation<InterfaceScreenNavigationProp>();
+type Props = {
+  navigation: InterfaceScreenNavigationProp,
+  route: InterfaceScreenRouteProp
+};
 
+export default function Interface({ navigation, route }: Props) {
     const [note, setNote] = useState("");
     const [mode, setMode] = useState("");
     const [submitted, setSubmitted] = useState(false);
     const [scaleNotes, setScaleNotes] = useState<string[]>([]);
+    const { clef } = route.params;
     type Data = "label" | "value";
     const notes: Record<Data, string>[] = [
         { label: "E", value: "E" }, 
@@ -69,7 +74,7 @@ export default function Interface() {
             {submitted && 
             <View>
                 {scaleNotes.length === 0 ? <Text>This scale is impractical!</Text>
-                : <MusicNotation clef="bass" notes={scaleNotes} /> }
+                : <MusicNotation clef={clef} notes={scaleNotes} /> }
               </View>}
             <Button title="Reset" onPress={() => {
                 setSubmitted(false);

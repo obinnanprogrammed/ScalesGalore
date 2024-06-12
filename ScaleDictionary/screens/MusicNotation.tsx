@@ -9,9 +9,16 @@ interface MusicNotationProps {
 }
 
 const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
-    let currOctave: number = 2;
+    let altOctaveKeys: string[] = ["Db", "D", "Eb"];
 
-    // on treble clef, stem flips at B4, whereas on bass, stem flips at D3
+    // setting octave
+    let currOctave: number = (clef === "treble" ? 4 : 2);
+    // resetting for bass clef Db, D, Eb to avoid below the staff notes
+    if(clef === "bass" && altOctaveKeys.includes(notes[0])) {
+        currOctave = 3;
+    }
+
+    // setting the staff
     const { Stave, StaveNote, Formatter, Accidental, Beam } = Vex.Flow;
     const context = new ReactNativeSVGContext(NotoFontPack, { width: 400, height: 400 });
     const stave = new Stave(50, 50, 300);
@@ -24,6 +31,7 @@ const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
     const quarter = [
         new StaveNote({ clef: clef, keys: [`${notes[0]}/${notes[0].includes("C") ? (++currOctave).toString() : currOctave.toString()}`], duration: 'q' }),
     ];
+    // check for accidentals
     if(notes[0].includes("#")) {
         quarter[0].addAccidental(0, new Accidental("#"));
     } else if(notes[0].includes("b")) {
@@ -56,13 +64,11 @@ const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
         }
         m1Group2[i].autoStem();
     }
-    
+    // drawing notes and beams
     const m1Notes = quarter.concat(m1Group1, m1Group2);
     const m1Beams = Beam.generateBeams(m1Notes);
     Formatter.FormatAndDraw(context, stave, m1Notes);
     m1Beams.forEach((b) => { b.setContext(context).draw() })
-    //group1Beam.setContext(context).draw();
-    //group2Beam.setContext(context).draw();
 
     // descending notes
     const descendingStaff = new Stave(stave.getX(), stave.getBottomLineY(), stave.getWidth());
@@ -107,13 +113,13 @@ const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
         }
         m2Group2[i].autoStem();
     }
-    
+    // beams again
     const m2Notes = secondQuarter.concat(m2Group1, m2Group2);
     const m2Beams = Beam.generateBeams(m2Notes);
     Formatter.FormatAndDraw(context, descendingStaff, m2Notes);
     m2Beams.forEach((b) => { b.setContext(context).draw() });
     
-
+    // getting that last note in there
     const oneMore = new Stave(descendingStaff.getX()+descendingStaff.getWidth()*3/8, descendingStaff.getBottomLineY(), 75);
     oneMore.setContext(context);
     oneMore.draw();

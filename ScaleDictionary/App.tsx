@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Welcome from './screens/Welcome';
@@ -8,7 +7,7 @@ import { registerRootComponent } from 'expo';
 
 type RootStackParamList = {
   Welcome: undefined;
-  Interface: undefined;
+  Interface: { clef: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
