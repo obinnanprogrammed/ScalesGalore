@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
 type RootStackParamList = {
@@ -25,7 +25,8 @@ export default function Welcome() {
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
             data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
             </Dropdown>
-            <Button title="Go!" onPress={() => { navigation.navigate("Interface", { clef: clef })}} />
+            <Pressable style={styles.button} 
+            onPress={() => { navigation.navigate("Interface", { clef: clef })}}><Text>Text</Text></Pressable>
         </View>
     )
 }
@@ -36,6 +37,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    button: {
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 25,
+        paddingVertical: 10,
+        borderRadius: 8,
+        elevation: 4,
+        backgroundColor: 'gray'
     }
 });
 

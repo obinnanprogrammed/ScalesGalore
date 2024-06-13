@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import MusicNotation from './MusicNotation';
 import { majorScales, minorScales } from './scales';
@@ -57,7 +57,7 @@ export default function Interface({ navigation, route }: Props) {
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
             data={modes} placeholder="Select mode...." value={mode} onChange={item => setMode(item.value)}>
             </Dropdown>
-            <Button title="Submit" onPress={() => {
+            <Pressable style={styles.button} onPress={() => {
               setSubmitted(true);
               if(mode === "Major") {
                 if((note + " " + mode) in majorScales) {
@@ -68,7 +68,7 @@ export default function Interface({ navigation, route }: Props) {
                   setScaleNotes(minorScales[note + " " + mode]);
                 }
               }
-            }} />
+            }}><Text>Submit</Text></Pressable>
             {submitted && <Text>{note + " " + mode}</Text>}
             
             {submitted && 
@@ -76,13 +76,13 @@ export default function Interface({ navigation, route }: Props) {
                 {scaleNotes.length === 0 ? <Text>This scale is impractical!</Text>
                 : <MusicNotation clef={clef} notes={scaleNotes} /> }
               </View>}
-            <Button title="Reset" onPress={() => {
+            <Pressable style={styles.button} onPress={() => {
                 setSubmitted(false);
                 setNote("");
                 setMode("");
                 setScaleNotes([]);
-            }} />
-            <Button title="Return Home" onPress={() => {navigation.navigate("Welcome")}} />
+            }}><Text>Reset</Text></Pressable>
+            <Pressable style={styles.button} onPress={() => {navigation.navigate("Welcome")}}><Text>Return Home</Text></Pressable>
         </View>
     )
 }
@@ -93,7 +93,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+    button: {
+      alignItems: "center",
+      justifyContent: "center",
+      paddingHorizontal: 25,
+      paddingVertical: 10,
+      margin: 4,
+      borderRadius: 8,
+      elevation: 4,
+      backgroundColor: 'gray'
+  }
 });
 
 const dropdownStyles = StyleSheet.create({
