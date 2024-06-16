@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useTheme } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
@@ -12,6 +12,7 @@ type WelcomeScreenNavigationProp = NavigationProp<RootStackParamList, 'Welcome'>
 export default function Welcome() {
     const navigation = useNavigation<WelcomeScreenNavigationProp>();
     const [clef, setClef] = useState("");
+    const { colors } = useTheme();
 
     type Data = "label" | "value";
     const options: Record<Data, string>[] = [
@@ -21,12 +22,12 @@ export default function Welcome() {
 
     return (
         <View style={styles.container}>
-            <Text>Welcome. Select clef and click button to get started!</Text>
+            <Text style={{ color: colors.text }}>Welcome. Select clef and click button to get started!</Text>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
             data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
             </Dropdown>
-            <Pressable style={styles.button} 
-            onPress={() => { navigation.navigate("Interface", { clef: clef })}}><Text>Text</Text></Pressable>
+            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
+            onPress={() => { navigation.navigate("Interface", { clef: clef })}}><Text>Go</Text></Pressable>
         </View>
     )
 }
@@ -34,7 +35,6 @@ export default function Welcome() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 8,
         elevation: 4,
-        backgroundColor: 'gray'
     }
 });
 

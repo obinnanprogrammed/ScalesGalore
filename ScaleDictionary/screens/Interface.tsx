@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { NavigationProp, RouteProp, useTheme } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import MusicNotation from './MusicNotation';
@@ -23,6 +23,7 @@ export default function Interface({ navigation, route }: Props) {
     const [submitted, setSubmitted] = useState(false);
     const [scaleNotes, setScaleNotes] = useState<string[]>([]);
     const { clef } = route.params;
+    const { colors } = useTheme();
     type Data = "label" | "value";
     const notes: Record<Data, string>[] = [
         { label: "E", value: "E" }, 
@@ -49,15 +50,15 @@ export default function Interface({ navigation, route }: Props) {
     ]
     return (
         <View style={styles.container}>
-            <Text>Pick your scale here!</Text>
-            <Text>Click the reeset button to generate a different scale.</Text>
+            <Text style={{ color: colors.text }}>Pick your scale here!</Text>
+            <Text style={{ color: colors.text }}>Click the reeset button to generate a different scale.</Text>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
             data={notes} placeholder="Select note...." value={note} onChange={item => setNote(item.value)}>
             </Dropdown>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
             data={modes} placeholder="Select mode...." value={mode} onChange={item => setMode(item.value)}>
             </Dropdown>
-            <Pressable style={styles.button} onPress={() => {
+            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={() => {
               setSubmitted(true);
               if(mode === "Major") {
                 if((note + " " + mode) in majorScales) {
@@ -69,20 +70,20 @@ export default function Interface({ navigation, route }: Props) {
                 }
               }
             }}><Text>Submit</Text></Pressable>
-            {submitted && <Text>{note + " " + mode}</Text>}
+            {submitted && <Text style={{ color: colors.text }}>{note + " " + mode}</Text>}
             
             {submitted && 
             <View>
                 {scaleNotes.length === 0 ? <Text>This scale is impractical!</Text>
                 : <MusicNotation clef={clef} notes={scaleNotes} /> }
               </View>}
-            <Pressable style={styles.button} onPress={() => {
+            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={() => {
                 setSubmitted(false);
                 setNote("");
                 setMode("");
                 setScaleNotes([]);
             }}><Text>Reset</Text></Pressable>
-            <Pressable style={styles.button} onPress={() => {navigation.navigate("Welcome")}}><Text>Return Home</Text></Pressable>
+            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={() => {navigation.navigate("Welcome")}}><Text>Return Home</Text></Pressable>
         </View>
     )
 }
@@ -90,7 +91,6 @@ export default function Interface({ navigation, route }: Props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
       margin: 4,
       borderRadius: 8,
       elevation: 4,
-      backgroundColor: 'gray'
   }
 });
 
