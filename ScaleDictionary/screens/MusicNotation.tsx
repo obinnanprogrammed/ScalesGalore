@@ -9,7 +9,8 @@ interface MusicNotationProps {
 }
 
 const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
-    let altOctaveKeys: string[] = ["Db", "D", "Eb"];
+    // in bass clef, these will go too far below the staff (restriction to be removed and reworked later)
+    let altOctaveKeys: string[] = ["Db", "D", "D#", "Eb"]; 
 
     // setting octave
     let currOctave: number = (clef === "treble" ? 4 : 2);

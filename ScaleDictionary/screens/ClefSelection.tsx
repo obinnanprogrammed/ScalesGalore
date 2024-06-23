@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigation, NavigationProp, useTheme } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
+import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
 
 type RootStackParamList = {
     Welcome: undefined;
@@ -14,7 +15,13 @@ export default function ClefSelection() {
     const navigation = useNavigation<WelcomeScreenNavigationProp>();
     const [clef, setClef] = useState("");
     const { colors } = useTheme();
+    let [fontsLoaded, fontError] = useFonts({
+      JosefinSans_400Regular
+    })
 
+    if(!fontsLoaded && !fontError) {
+      return null;
+    }
     type Data = "label" | "value";
     const options: Record<Data, string>[] = [
         { label: "Treble", value: "treble" },
@@ -23,7 +30,7 @@ export default function ClefSelection() {
 
     return (
         <View style={styles.container}>
-            <Text style={{ color: colors.text }}>Select clef to get started!</Text>
+            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Select clef to get started!</Text>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
             data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
             </Dropdown>
@@ -38,6 +45,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        fontFamily: "JosefinSans_400Regular"
     },
     button: {
         alignItems: "center",

@@ -1,5 +1,6 @@
 import { useNavigation, NavigationProp, useTheme } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
 
 type RootStackParamList = {
     Welcome: undefined;
@@ -11,11 +12,17 @@ type WelcomeScreenNavigationProp = NavigationProp<RootStackParamList, 'Welcome'>
 export default function Welcome() {
     const navigation = useNavigation<WelcomeScreenNavigationProp>();
     const { colors } = useTheme();
+    let [fontsLoaded, fontError] = useFonts({
+      JosefinSans_400Regular
+    })
 
+    if(!fontsLoaded && !fontError) {
+      return null;
+    }
     return (
         <View style={styles.container}>
-            <Text style={{ color: colors.text }}>Welcome to ScaleDictionary!</Text>
-            <Text style={{ color: colors.text }}>(name subject to change)</Text>
+            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Welcome to ScaleDictionary!</Text>
+            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>(name subject to change)</Text>
             <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
             onPress={() => { navigation.navigate("ClefSelection")}}><Text>Go</Text></Pressable>
         </View>
@@ -27,6 +34,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        fontFamily: "JosefinSans_400Regular"
     },
     button: {
         alignItems: "center",

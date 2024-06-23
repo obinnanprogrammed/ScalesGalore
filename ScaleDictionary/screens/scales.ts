@@ -1,3 +1,7 @@
+/**
+ * Major Scales
+ * Care is taken to avoid scales that use double sharps or double flats
+ */
 export const majorScales: Record<string, string[]> = {
     "E Major": ["E", "F#", "G#", "A", "B", "C#", "D#", "E"],
     "F Major": ["F", "G", "A", "Bb", "C", "D", "E", "F"],
@@ -15,6 +19,10 @@ export const majorScales: Record<string, string[]> = {
     "Eb Major": ["Eb", "F", "G", "Ab", "Bb", "C", "D", "Eb"]
 }
 
+/**
+ * Minor Scales
+ * Care is taken to avoid scales that use double sharps or double flats
+ */
 export const minorScales: Record<string, string[]> = {
     "E Minor": ["E", "F#", "G", "A", "B", "C", "D", "E"],
     "F Minor": ["F", "G", "Ab", "Bb", "C", "Db", "Eb", "F"],

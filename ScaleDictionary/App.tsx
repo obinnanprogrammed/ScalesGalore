@@ -4,6 +4,7 @@ import Welcome from './screens/Welcome';
 import ClefSelection from './screens/ClefSelection';
 import Interface from './screens/Interface';
 import { registerRootComponent } from 'expo';
+import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
 
 const Theme: NavigationTheme = {
   ...DefaultTheme,
@@ -28,6 +29,13 @@ type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  let [fontsLoaded, fontError] = useFonts({
+    JosefinSans_400Regular,
+  })
+
+  if(!fontsLoaded && !fontError) {
+    return null;
+  }
   return (
     <NavigationContainer theme={Theme}>
       <Stack.Navigator initialRouteName="Welcome">

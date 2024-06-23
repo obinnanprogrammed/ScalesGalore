@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import MusicNotation from './MusicNotation';
 import { majorScales, minorScales } from './scales';
+import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
 
 type RootStackParamList = {
     Welcome: undefined;
@@ -25,6 +26,13 @@ export default function Interface({ navigation, route }: Props) {
     const [scaleNotes, setScaleNotes] = useState<string[]>([]);
     const { clef } = route.params;
     const { colors } = useTheme();
+    let [fontsLoaded, fontError] = useFonts({
+      JosefinSans_400Regular
+    })
+
+    if(!fontsLoaded && !fontError) {
+      return null;
+    }
     type Data = "label" | "value";
     const notes: Record<Data, string>[] = [
         { label: "E", value: "E" }, 
@@ -51,8 +59,8 @@ export default function Interface({ navigation, route }: Props) {
     ]
     return (
         <View style={styles.container}>
-            <Text style={{ color: colors.text }}>Pick your scale here!</Text>
-            <Text style={{ color: colors.text }}>Click the reeset button to generate a different scale.</Text>
+            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Pick your scale here!</Text>
+            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Click the reeset button to generate a different scale.</Text>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
             data={notes} placeholder="Select note...." value={note} onChange={item => setNote(item.value)}>
             </Dropdown>
@@ -71,11 +79,11 @@ export default function Interface({ navigation, route }: Props) {
                 }
               }
             }}><Text>Submit</Text></Pressable>
-            {submitted && <Text style={{ color: colors.text }}>{note + " " + mode}</Text>}
+            {submitted && <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>{note + " " + mode}</Text>}
             
             {submitted && 
             <View>
-                {scaleNotes.length === 0 ? <Text>This scale is impractical!</Text>
+                {scaleNotes.length === 0 ? <Text style={{ fontFamily: styles.container.fontFamily }}>This scale is impractical!</Text>
                 : <MusicNotation clef={clef} notes={scaleNotes} /> }
               </View>}
             <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={() => {
@@ -94,6 +102,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        fontFamily: "JosefinSans_400Regular"
     },
     button: {
       alignItems: "center",
