@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useNavigation, NavigationProp, useTheme } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { Dropdown } from 'react-native-element-dropdown';
 
 type RootStackParamList = {
     Welcome: undefined;
@@ -8,16 +10,25 @@ type RootStackParamList = {
 };
 type WelcomeScreenNavigationProp = NavigationProp<RootStackParamList, 'Welcome'>;
 
-export default function Welcome() {
+export default function ClefSelection() {
     const navigation = useNavigation<WelcomeScreenNavigationProp>();
+    const [clef, setClef] = useState("");
     const { colors } = useTheme();
+
+    type Data = "label" | "value";
+    const options: Record<Data, string>[] = [
+        { label: "Treble", value: "treble" },
+        { label: "Bass", value: "bass" }
+    ];
 
     return (
         <View style={styles.container}>
-            <Text style={{ color: colors.text }}>Welcome to ScaleDictionary!</Text>
-            <Text style={{ color: colors.text }}>(name subject to change)</Text>
+            <Text style={{ color: colors.text }}>Select clef to get started!</Text>
+            <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
+            data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
+            </Dropdown>
             <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
-            onPress={() => { navigation.navigate("ClefSelection")}}><Text>Go</Text></Pressable>
+            onPress={() => { navigation.navigate("Interface", { clef: clef })}}><Text>Go</Text></Pressable>
         </View>
     )
 }

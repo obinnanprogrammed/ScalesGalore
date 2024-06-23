@@ -7,6 +7,7 @@ import { majorScales, minorScales } from './scales';
 
 type RootStackParamList = {
     Welcome: undefined;
+    ClefSelection: undefined;
     Interface: { clef: string };
 };
 type InterfaceScreenNavigationProp = NavigationProp<RootStackParamList, 'Interface'>;

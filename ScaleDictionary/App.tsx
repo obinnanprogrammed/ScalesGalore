@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { NavigationContainer, DefaultTheme, Theme as NavigationTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Welcome from './screens/Welcome';
+import ClefSelection from './screens/ClefSelection';
 import Interface from './screens/Interface';
 import { registerRootComponent } from 'expo';
 
@@ -11,16 +11,17 @@ const Theme: NavigationTheme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#DCE014',
-    background: '#403C3C',
+    background: '#9ab7e6',
     card: 'black',
     text: 'white',
-    border: '#403C3C',  // This was 'background', set it explicitly
-    notification: '#DCE014'  // This was 'primary', set it explicitly
+    border: '#9ab7e6',  
+    notification: '#DCE014'
   }
 };
 
 type RootStackParamList = {
   Welcome: undefined;
+  ClefSelection: undefined;
   Interface: { clef: string };
 };
 
@@ -31,6 +32,7 @@ export default function App() {
     <NavigationContainer theme={Theme}>
       <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome}></Stack.Screen>
+        <Stack.Screen options={{ headerShown: false }} name="ClefSelection" component={ClefSelection}></Stack.Screen>
         <Stack.Screen options={{ headerShown: false }} name="Interface" component={Interface}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
