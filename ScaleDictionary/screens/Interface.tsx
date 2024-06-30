@@ -124,23 +124,28 @@ export default function Interface({ navigation, route }: Props) {
 
     return (
         <View style={styles.container}>
-            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Pick your scale here!</Text>
-            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Click the reset button to generate a different scale.</Text>
-            <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
-            data={notes} placeholder="Select note...." value={note} onChange={item => setNote(item.value)}>
-            </Dropdown>
-            <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
-            data={modes} placeholder="Select mode...." value={mode} onChange={item => setMode(item.value)}>
-            </Dropdown>
-            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={handleSubmit}><Text>Submit</Text></Pressable>
+            {!submitted && 
+              <View style={styles.container}>
+                <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Pick your scale here!</Text>
+                <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
+                data={notes} placeholder="Select note...." value={note} onChange={item => setNote(item.value)}>
+                </Dropdown>
+                <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
+                data={modes} placeholder="Select mode...." value={mode} onChange={item => setMode(item.value)}>
+                </Dropdown>
+                <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={handleSubmit}><Text>Submit</Text></Pressable>
+              </View>}
+            
             
             {submitted && (scaleNotes.length === 0 ? <Text style={{ fontFamily: styles.container.fontFamily }}>This scale is impractical!</Text>
-            : <View style={[styles.container, { borderColor: "black", borderWidth: 5, borderRadius: 2 }]}>
+            : <View style={styles.container}>
                 <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>{note + " " + mode}</Text>
                 <MusicNotation clef={clef} notes={scaleNotes} />
                 <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={playSound}><Text>Listen!</Text></Pressable>
+                <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={handleReset}><Text>Reset</Text></Pressable>
+                <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Click the reset button to generate a different scale.</Text>
               </View>)}
-            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={handleReset}><Text>Reset</Text></Pressable>
+            
             <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={() => {navigation.navigate("Welcome")}}><Text>Return Home</Text></Pressable>
         </View>
     )
