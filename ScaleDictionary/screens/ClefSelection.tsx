@@ -30,7 +30,7 @@ export default function ClefSelection() {
 
     return (
         <View style={styles.container}>
-            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Select clef to get started!</Text>
+            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text, fontSize: 40 }}>Select clef to get started!</Text>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
             data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
             </Dropdown>

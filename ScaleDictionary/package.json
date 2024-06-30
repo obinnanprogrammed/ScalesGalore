@@ -26,7 +26,8 @@
     "react-native-webview": "13.8.6",
     "standalone-vexflow-context": "^0.1.1",
     "typescript": "~5.3.3",
-    "vexflow": "^1.2.93"
+    "vexflow": "^1.2.93",
+    "expo-av": "~14.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

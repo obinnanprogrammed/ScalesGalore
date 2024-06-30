@@ -21,8 +21,8 @@ export default function Welcome() {
     }
     return (
         <View style={styles.container}>
-            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Welcome to ScaleDictionary!</Text>
-            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>(name subject to change)</Text>
+            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text, fontSize: 50 }}>Welcome to ScaleDictionary!</Text>
+            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text, fontSize: 25 }}>(name subject to change)</Text>
             <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
             onPress={() => { navigation.navigate("ClefSelection")}}><Text>Go</Text></Pressable>
         </View>

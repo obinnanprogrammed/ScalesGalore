@@ -31,6 +31,7 @@ export const minorScales: Record<string, string[]> = {
     "G# Minor": ["G#", "A#", "B", "C#", "D#", "E", "F#", "G#"],
     "Ab Minor": ["Ab", "Bb", "Cb", "Db", "Eb", "Fb", "Gb", "Ab"],
     "A Minor": ["A", "B", "C", "D", "E", "F", "G", "A"],
+    "A# Minor": ["A#", "B#", "C#", "D#", "E#", "F#", "G#", "A#"],
     "Bb Minor": ["Bb", "C", "Db", "Eb", "F", "Gb", "Ab", "Bb"],
     "B Minor": ["B", "C#", "D", "E", "F#", "G", "A", "B"],
     "C Minor": ["C", "D", "Eb", "F", "G", "Ab", "Bb", "C"],

@@ -21,8 +21,8 @@ const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
 
     // setting the staff
     const { Stave, StaveNote, Formatter, Accidental, Beam } = Vex.Flow;
-    const context = new ReactNativeSVGContext(NotoFontPack, { width: 400, height: 400 });
-    const stave = new Stave(50, 50, 300);
+    const context = new ReactNativeSVGContext(NotoFontPack, { width: 400, height: 300 });
+    const stave = new Stave(50, 0, 300);
     stave.setContext(context);
     stave.addClef(clef);
     stave.addTimeSignature('4/4');
@@ -121,11 +121,11 @@ const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
     m2Beams.forEach((b) => { b.setContext(context).draw() });
     
     // getting that last note in there
-    const oneMore = new Stave(descendingStaff.getX()+descendingStaff.getWidth()*3/8, descendingStaff.getBottomLineY(), 75);
+    const oneMore = new Stave(descendingStaff.getX(), descendingStaff.getBottomLineY(), descendingStaff.getWidth());
     oneMore.setContext(context);
     oneMore.draw();
     const lastNote = [
-        new StaveNote({ clef: clef, keys: [notes[0]+"/"+currOctave.toString()], duration: 'q' })
+        new StaveNote({ clef: clef, keys: [notes[0]+"/"+currOctave.toString()], duration: 'w' })
     ];
     if(notes[0].includes("#")) {
         lastNote[0].addAccidental(0, new Accidental("#"));

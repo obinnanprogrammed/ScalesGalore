@@ -1,10 +1,15 @@
-import { useState } from 'react';
+/**
+ * TODO: add treble clef minor scales, all bass clef scales
+ */
+import { useState, useEffect } from 'react';
 import { NavigationProp, RouteProp, useTheme } from '@react-navigation/native';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import MusicNotation from './MusicNotation';
-import { majorScales, minorScales } from './scales';
+import { majorScales, minorScales } from '../utilities/scales';
 import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
+import { Audio } from 'expo-av';
+import soundFiles from '../utilities/soundImports';
 
 type RootStackParamList = {
     Welcome: undefined;
@@ -19,20 +24,79 @@ type Props = {
   route: InterfaceScreenRouteProp
 };
 
+type SoundFiles = Record<string, any>;
 export default function Interface({ navigation, route }: Props) {
+    // states
     const [note, setNote] = useState("");
     const [mode, setMode] = useState("");
     const [submitted, setSubmitted] = useState(false);
     const [scaleNotes, setScaleNotes] = useState<string[]>([]);
+    const [sound, setSound] = useState<Audio.Sound | null>(null);
+
+    // clef passed in from ClefSelection
     const { clef } = route.params;
+
+    // theme and styling stuff
     const { colors } = useTheme();
     let [fontsLoaded, fontError] = useFonts({
       JosefinSans_400Regular
     })
 
+    // sound stuff: only available with treble clef major scales
+    async function playSound() {
+      const sFiles: SoundFiles = soundFiles;
+      const soundKey = `${note}-${mode}-${clef}`;
+      const soundFile = sFiles[soundKey];
+      
+      if (!soundFile) {
+        console.error("Sound file not found for:", note, mode, clef);
+        return;
+      }
+      console.log("Loading scale...");
+      const { sound } = await Audio.Sound.createAsync(soundFile);
+      setSound(sound);
+
+      console.log("Playing scale...");
+      await sound.playAsync();
+    }
+
+    // useEffect for sound
+    useEffect(() => {
+      return sound ? () => {
+        console.log("Unloading sound....");
+        sound.unloadAsync();
+      }: undefined;
+    }, [sound]);
+
     if(!fontsLoaded && !fontError) {
       return null;
     }
+
+    // submission handling
+    const handleSubmit = () => {
+      setSubmitted(true);
+      if(mode === "Major") {
+        if((note + " " + mode) in majorScales) {
+          setScaleNotes(majorScales[note + " " + mode]);
+        }
+      } else if(mode === "Minor") {
+        if((note + " " + mode) in minorScales) {
+          setScaleNotes(minorScales[note + " " + mode]);
+        }
+      }
+    }
+    
+    // resetting parameters
+    const handleReset = () => {
+      setSubmitted(false);
+      setNote("");
+      setMode("");
+      setScaleNotes([]);
+      setSound(null);
+    }
+
+
+    // notes and modes dictionaries
     type Data = "label" | "value";
     const notes: Record<Data, string>[] = [
         { label: "E", value: "E" }, 
@@ -57,41 +121,26 @@ export default function Interface({ navigation, route }: Props) {
         { label: "Major", value: "Major" }, 
         { label: "Minor", value: "Minor" }
     ]
+
     return (
         <View style={styles.container}>
             <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Pick your scale here!</Text>
-            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Click the reeset button to generate a different scale.</Text>
+            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Click the reset button to generate a different scale.</Text>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
             data={notes} placeholder="Select note...." value={note} onChange={item => setNote(item.value)}>
             </Dropdown>
             <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
             data={modes} placeholder="Select mode...." value={mode} onChange={item => setMode(item.value)}>
             </Dropdown>
-            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={() => {
-              setSubmitted(true);
-              if(mode === "Major") {
-                if((note + " " + mode) in majorScales) {
-                  setScaleNotes(majorScales[note + " " + mode]);
-                }
-              } else if(mode === "Minor") {
-                if((note + " " + mode) in minorScales) {
-                  setScaleNotes(minorScales[note + " " + mode]);
-                }
-              }
-            }}><Text>Submit</Text></Pressable>
-            {submitted && <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>{note + " " + mode}</Text>}
+            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={handleSubmit}><Text>Submit</Text></Pressable>
             
-            {submitted && 
-            <View>
-                {scaleNotes.length === 0 ? <Text style={{ fontFamily: styles.container.fontFamily }}>This scale is impractical!</Text>
-                : <MusicNotation clef={clef} notes={scaleNotes} /> }
-              </View>}
-            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={() => {
-                setSubmitted(false);
-                setNote("");
-                setMode("");
-                setScaleNotes([]);
-            }}><Text>Reset</Text></Pressable>
+            {submitted && (scaleNotes.length === 0 ? <Text style={{ fontFamily: styles.container.fontFamily }}>This scale is impractical!</Text>
+            : <View style={[styles.container, { borderColor: "black", borderWidth: 5, borderRadius: 2 }]}>
+                <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>{note + " " + mode}</Text>
+                <MusicNotation clef={clef} notes={scaleNotes} />
+                <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={playSound}><Text>Listen!</Text></Pressable>
+              </View>)}
+            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={handleReset}><Text>Reset</Text></Pressable>
             <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={() => {navigation.navigate("Welcome")}}><Text>Return Home</Text></Pressable>
         </View>
     )
