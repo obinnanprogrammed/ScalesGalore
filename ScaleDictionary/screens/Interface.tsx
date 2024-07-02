@@ -1,5 +1,5 @@
 /**
- * TODO: add treble clef minor scales, all bass clef scales
+ * TODO: continue formatting overhaul
  */
 import { useState, useEffect } from 'react';
 import { NavigationProp, RouteProp, useTheme } from '@react-navigation/native';
@@ -137,7 +137,13 @@ export default function Interface({ navigation, route }: Props) {
               </View>}
             
             
-            {submitted && (scaleNotes.length === 0 ? <Text style={{ fontFamily: styles.container.fontFamily }}>This scale is impractical!</Text>
+            {submitted && (scaleNotes.length === 0 ?
+            <View style={styles.container}>
+              <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>This scale is impractical!</Text>
+              <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>It likely contains double flats or double sharps.</Text>
+              <Pressable style={[styles.button, { backgroundColor: colors.primary }]} onPress={handleReset}><Text>Reset</Text></Pressable>
+              <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Click the reset button to generate a different scale.</Text>
+            </View>
             : <View style={styles.container}>
                 <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>{note + " " + mode}</Text>
                 <MusicNotation clef={clef} notes={scaleNotes} />
@@ -156,6 +162,8 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        borderColor: 'black',
+        borderWidth: 5,
         fontFamily: "JosefinSans_400Regular"
     },
     button: {

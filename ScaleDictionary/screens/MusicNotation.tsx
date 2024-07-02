@@ -1,6 +1,9 @@
+/**
+ * TODO: dynamic (window-based) sheet music sizing, figure out how to scale down context
+ */
 import { FC } from 'react'
 import { ReactNativeSVGContext, NotoFontPack } from 'standalone-vexflow-context';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import Vex from 'vexflow';
 
 interface MusicNotationProps {
@@ -8,7 +11,9 @@ interface MusicNotationProps {
     notes: string[]
 }
 
+const { height, width } = Dimensions.get("window");
 const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
+    
     // in bass clef, these will go too far below the staff (restriction to be removed and reworked later)
     let altOctaveKeys: string[] = ["Db", "D", "D#", "Eb"]; 
 
@@ -21,7 +26,9 @@ const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
 
     // setting the staff
     const { Stave, StaveNote, Formatter, Accidental, Beam } = Vex.Flow;
+    
     const context = new ReactNativeSVGContext(NotoFontPack, { width: 400, height: 300 });
+    
     const stave = new Stave(50, 0, 300);
     stave.setContext(context);
     stave.addClef(clef);
