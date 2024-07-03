@@ -1,7 +1,7 @@
 /**
  * TODO: dynamic (window-based) sheet music sizing, figure out how to scale down context
  */
-import { FC } from 'react'
+import { FC, useState, useEffect } from 'react'
 import { ReactNativeSVGContext, NotoFontPack } from 'standalone-vexflow-context';
 import { View, Dimensions } from 'react-native';
 import Vex from 'vexflow';
@@ -13,6 +13,16 @@ interface MusicNotationProps {
 
 const { height, width } = Dimensions.get("window");
 const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
+    const [windowHeight, setWindowHeight] = useState<number>(height);
+    const [windowWidth, setWindowWidth] = useState<number>(width);
+
+    useEffect(() => {
+        const dimChange = Dimensions.addEventListener("change", ({ window }) => {
+            setWindowHeight(window.height);
+            setWindowWidth(window.width);
+        });
+        return () => dimChange?.remove();
+    });
     
     // in bass clef, these will go too far below the staff (restriction to be removed and reworked later)
     let altOctaveKeys: string[] = ["Db", "D", "D#", "Eb"]; 
@@ -27,9 +37,9 @@ const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
     // setting the staff
     const { Stave, StaveNote, Formatter, Accidental, Beam } = Vex.Flow;
     
-    const context = new ReactNativeSVGContext(NotoFontPack, { width: 400, height: 300 });
+    const context = new ReactNativeSVGContext(NotoFontPack, { width: windowWidth, height: windowWidth*(3/4) });
     
-    const stave = new Stave(50, 0, 300);
+    const stave = new Stave(windowWidth/8, 0, windowWidth*(3/4));
     stave.setContext(context);
     stave.addClef(clef);
     stave.addTimeSignature('4/4');
