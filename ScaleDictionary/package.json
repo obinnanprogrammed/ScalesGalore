@@ -14,6 +14,7 @@
     "@react-navigation/native": "^6.1.12",
     "@react-navigation/native-stack": "^6.9.20",
     "expo": "~51.0.9",
+    "expo-av": "~14.0.6",
     "expo-font": "~12.0.7",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
@@ -26,8 +27,7 @@
     "react-native-webview": "13.8.6",
     "standalone-vexflow-context": "^0.1.1",
     "typescript": "~5.3.3",
-    "vexflow": "^1.2.93",
-    "expo-av": "~14.0.5"
+    "vexflow": "^1.2.83"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
