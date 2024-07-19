@@ -1,10 +1,10 @@
 /**
- * TODO: dynamic (window-based) sheet music sizing, figure out how to scale down context
+ * TODO: figure out how to appropriately scale notation to fit smaller screens
  */
 import { FC, useState, useEffect } from 'react'
-import { ReactNativeSVGContext, NotoFontPack } from 'standalone-vexflow-context';
-import { View, Dimensions } from 'react-native';
-import Vex from 'vexflow';
+import { View, Image, ActivityIndicator, Dimensions } from 'react-native';
+import axios from 'axios';
+import { SvgXml } from 'react-native-svg';
 
 interface MusicNotationProps {
     clef: string,
@@ -15,7 +15,8 @@ const { height, width } = Dimensions.get("window");
 const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
     const [windowHeight, setWindowHeight] = useState<number>(height);
     const [windowWidth, setWindowWidth] = useState<number>(width);
-
+    const [loading, setLoading] = useState<boolean>(true);
+    const [svg, setSvg] = useState<string | null>(null);
     useEffect(() => {
         const dimChange = Dimensions.addEventListener("change", ({ window }) => {
             setWindowHeight(window.height);
@@ -34,126 +35,33 @@ const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
         currOctave = 3;
     }
 
-    // setting the staff
-    const { Stave, StaveNote, Formatter, Accidental, Beam } = Vex.Flow;
-    
-    const context = new ReactNativeSVGContext(NotoFontPack, { width: windowWidth, height: windowWidth*(3/4) });
-    
-    const stave = new Stave(windowWidth/8, 0, windowWidth*(3/4));
-    stave.setContext(context);
-    stave.addClef(clef);
-    stave.addTimeSignature('4/4');
-    stave.draw();
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.post("http://10.0.0.126:3000/render", {
+                    clef: clef,
+                    notes: notes,
+                    startingOctave: currOctave
+                });
+                setSvg(response.data);
+                setLoading(false);
+            } catch(e) {
+                console.error(e);
+                setLoading(false);
+            }
+        }
+        
+        fetchData();
+    }, [])
 
-    // ascending notes
-    const quarter = [
-        new StaveNote({ clef: clef, keys: [`${notes[0]}/${notes[0].includes("C") ? (++currOctave).toString() : currOctave.toString()}`], duration: 'q' }),
-    ];
-    // check for accidentals
-    if(notes[0].includes("#")) {
-        quarter[0].addAccidental(0, new Accidental("#"));
-    } else if(notes[0].includes("b")) {
-        quarter[0].addAccidental(0, new Accidental("b"));
+    if(loading) {
+        return <ActivityIndicator />;
     }
-    quarter[0].autoStem();
-    const m1Group1 = [
-        new StaveNote({ clef: clef, keys: [`${notes[1]}/${notes[1].includes("C") ? (++currOctave).toString() : currOctave.toString()}`], duration: '8' }),
-        new StaveNote({ clef: clef, keys: [`${notes[2]}/${notes[2].includes("C") ? (++currOctave).toString() : currOctave.toString()}`], duration: '8' })
-    ]
-    for(let i: number = 0; i < m1Group1.length; i++) {
-        if(notes[i+1].includes("#")) {
-            m1Group1[i].addAccidental(0, new Accidental("#"));
-        } else if(notes[i+1].includes("b")) {
-            m1Group1[i].addAccidental(0, new Accidental("b"));
-        }
-        m1Group1[i].autoStem();
-    }
-    const m1Group2 = [
-        new StaveNote({ clef: clef, keys: [`${notes[3]}/${notes[3].includes("C") ? (++currOctave).toString() : currOctave.toString()}`], duration: '8' }),
-        new StaveNote({ clef: clef, keys: [`${notes[4]}/${notes[4].includes("C") ? (++currOctave).toString() : currOctave.toString()}`], duration: '8' }),
-        new StaveNote({ clef: clef, keys: [`${notes[5]}/${notes[5].includes("C") ? (++currOctave).toString() : currOctave.toString()}`], duration: '8' }),
-        new StaveNote({ clef: clef, keys: [`${notes[6]}/${notes[6].includes("C") ? (++currOctave).toString() : currOctave.toString()}`], duration: '8' }),
-    ]
-    for(let i: number = 0; i < m1Group2.length; i++) {
-        if(notes[i+3].includes("#")) {
-            m1Group2[i].addAccidental(0, new Accidental("#"));
-        } else if(notes[i+3].includes("b")) {
-            m1Group2[i].addAccidental(0, new Accidental("b"));
-        }
-        m1Group2[i].autoStem();
-    }
-    // drawing notes and beams
-    const m1Notes = quarter.concat(m1Group1, m1Group2);
-    const m1Beams = Beam.generateBeams(m1Notes);
-    Formatter.FormatAndDraw(context, stave, m1Notes);
-    m1Beams.forEach((b) => { b.setContext(context).draw() })
-
-    // descending notes
-    const descendingStaff = new Stave(stave.getX(), stave.getBottomLineY(), stave.getWidth());
-    descendingStaff.setContext(context);
-    descendingStaff.draw();
-    const secondQuarter = [
-        new StaveNote({ clef: clef, keys: [`${notes[7]}/${notes[7].includes("C") ? (++currOctave).toString() : currOctave.toString()}`], duration: 'q' }),
-    ];
-    if(notes[7].includes("C")) {
-        currOctave--;
-    }
-    if(notes[7].includes("#")) {
-        secondQuarter[0].addAccidental(0, new Accidental("#"));
-    } else if(notes[7].includes("b")) {
-        secondQuarter[0].addAccidental(0, new Accidental("b"));
-    }
-    secondQuarter[0].autoStem();
-
-    const m2Group1 = [
-        new StaveNote({ clef: clef, keys: [`${notes[6]}/${notes[6].includes("C") ? (currOctave--).toString() : currOctave.toString()}`], duration: '8' }),
-        new StaveNote({ clef: clef, keys: [`${notes[5]}/${notes[5].includes("C") ? (currOctave--).toString() : currOctave.toString()}`], duration: '8' })
-    ]
-    for(let i: number = 0; i < m2Group1.length; i++) {
-        if(notes[6-i].includes("#")) {
-            m2Group1[i].addAccidental(0, new Accidental("#"));
-        } else if(notes[6-i].includes("b")) {
-            m2Group1[i].addAccidental(0, new Accidental("b"));
-        }
-        m2Group1[i].autoStem();
-    }
-    const m2Group2 = [
-        new StaveNote({ clef: clef, keys: [`${notes[4]}/${notes[4].includes("C") ? (currOctave--).toString() : currOctave.toString()}`], duration: '8' }),
-        new StaveNote({ clef: clef, keys: [`${notes[3]}/${notes[3].includes("C") ? (currOctave--).toString() : currOctave.toString()}`], duration: '8' }),
-        new StaveNote({ clef: clef, keys: [`${notes[2]}/${notes[2].includes("C") ? (currOctave--).toString() : currOctave.toString()}`], duration: '8' }),
-        new StaveNote({ clef: clef, keys: [`${notes[1]}/${notes[1].includes("C") ? (currOctave--).toString() : currOctave.toString()}`], duration: '8' }),
-    ]
-    for(let i: number = 0; i < m2Group2.length; i++) {
-        if(notes[4-i].includes("#")) {
-            m2Group2[i].addAccidental(0, new Accidental("#"));
-        } else if(notes[4-i].includes("b")) {
-            m2Group2[i].addAccidental(0, new Accidental("b"));
-        }
-        m2Group2[i].autoStem();
-    }
-    // beams again
-    const m2Notes = secondQuarter.concat(m2Group1, m2Group2);
-    const m2Beams = Beam.generateBeams(m2Notes);
-    Formatter.FormatAndDraw(context, descendingStaff, m2Notes);
-    m2Beams.forEach((b) => { b.setContext(context).draw() });
-    
-    // getting that last note in there
-    const oneMore = new Stave(descendingStaff.getX(), descendingStaff.getBottomLineY(), descendingStaff.getWidth());
-    oneMore.setContext(context);
-    oneMore.draw();
-    const lastNote = [
-        new StaveNote({ clef: clef, keys: [notes[0]+"/"+currOctave.toString()], duration: 'w' })
-    ];
-    if(notes[0].includes("#")) {
-        lastNote[0].addAccidental(0, new Accidental("#"));
-    } else if(notes[0].includes("b")) {
-        lastNote[0].addAccidental(0, new Accidental("b"));
-    }
-    lastNote[0].autoStem();
-    Formatter.FormatAndDraw(context, oneMore, lastNote);
 
     return (
-        <View>{ context.render() }</View>
+        <View>
+            <SvgXml xml={svg} width={windowWidth} height={windowWidth*(3/4)} />
+        </View>
     )
 }
 
