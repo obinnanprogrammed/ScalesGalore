@@ -1,1 +1,2 @@
-declare module "standalone-vexflow-context";
+declare module "react-native-vector-icons/Ionicons";
+declare module "react-native-global-props";

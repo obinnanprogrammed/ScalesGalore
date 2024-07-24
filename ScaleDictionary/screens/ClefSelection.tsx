@@ -1,23 +1,51 @@
-import { useState } from 'react';
-import { useNavigation, NavigationProp, useTheme } from '@react-navigation/native';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+/**
+ * TODO: Ensure final position of title on ClefSelection matches with same on Interface
+ */
+import { useState, useEffect } from 'react';
+import { NavigationProp, RouteProp, useTheme } from '@react-navigation/native';
+import { View, Text, Pressable, ImageBackground, Animated } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
+import { styles, dropdownStyles } from '../utilities/styles';
 
 type RootStackParamList = {
     Welcome: undefined;
-    ClefSelection: undefined;
+    ClefSelection: { translateY: Animated.Value };
     Interface: { clef: string };
 };
-type WelcomeScreenNavigationProp = NavigationProp<RootStackParamList, 'Welcome'>;
 
-export default function ClefSelection() {
-    const navigation = useNavigation<WelcomeScreenNavigationProp>();
+type ClefSelectionScreenNavigationProp = NavigationProp<RootStackParamList, 'ClefSelection'>;
+type ClefSelectionScreenRouteProp = RouteProp<RootStackParamList, 'ClefSelection'>;
+type Props = {
+  navigation: ClefSelectionScreenNavigationProp,
+  route: ClefSelectionScreenRouteProp
+};
+/**
+ * Clef selection component. This will be used in the first release version.
+ * Subsequent releases will replace this with an instrument selection feature.
+ */
+export default function ClefSelection({ navigation, route }: Props) {
     const [clef, setClef] = useState("");
     const { colors } = useTheme();
     let [fontsLoaded, fontError] = useFonts({
       JosefinSans_400Regular
-    })
+    });
+
+    const { translateY } = route.params;
+    const scale = translateY.interpolate({
+      inputRange: [-250, 0],
+      outputRange: [0.5, 1.0],
+      extrapolate: "clamp"
+    });
+
+    useEffect(() => {
+      Animated.timing(translateY, {
+        toValue: -250,
+        duration: 0,
+        useNativeDriver: true
+      }).start();
+    }, [translateY]);
 
     if(!fontsLoaded && !fontError) {
       return null;
@@ -29,66 +57,24 @@ export default function ClefSelection() {
     ];
 
     return (
-        <View style={styles.container}>
-            <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text, fontSize: 40 }}>Select clef to get started!</Text>
-            <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
-            data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
-            </Dropdown>
-            <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
-            onPress={() => { navigation.navigate("Interface", { clef: clef })}}><Text>Go</Text></Pressable>
-        </View>
+        <ImageBackground source={require("../assets/ScaleDictionary-background.png")} style={styles.background}>
+          <View style={styles.container}>
+              <Animated.Text 
+                    style={{ fontFamily: styles.container.fontFamily, 
+                    color: colors.text, fontSize: 50, 
+                    transform: [{ translateY }, { scale }] }}>ScaleDictionary!</Animated.Text>
+              <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text, fontSize: 40 }}>Select clef to get started!</Text>
+              <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
+              data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
+              </Dropdown>
+              <Pressable style={[styles.button, { backgroundColor: (clef === "" ? "gray" : colors.primary) }]}
+              disabled={clef === "" ? true : false} onPress={() => { navigation.navigate("Interface", { clef: clef })}}>
+                <Text>Go</Text>
+              </Pressable>
+              <Pressable style={styles.homeButton} onPress={() => {navigation.navigate("Welcome")}}>
+                <Ionicons name="home" size={24} color={colors.primary}></Ionicons>
+              </Pressable>
+          </View>
+        </ImageBackground>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: "JosefinSans_400Regular"
-    },
-    button: {
-        alignItems: "center",
-        justifyContent: "center",
-        paddingHorizontal: 25,
-        paddingVertical: 10,
-        borderRadius: 8,
-        elevation: 4,
-    }
-});
-
-const dropdownStyles = StyleSheet.create({
-    dropdown: {
-      margin: 16,
-      width: 200,
-      height: 50,
-      backgroundColor: 'white',
-      borderRadius: 12,
-      padding: 12,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 1.41,
-
-      elevation: 2,
-    },
-    item: {
-      padding: 17,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-    textItem: {
-      flex: 1,
-      fontSize: 16,
-    },
-    placeholderStyle: {
-      fontSize: 16,
-    },
-    selectedTextStyle: {
-      fontSize: 16,
-    },
-  });

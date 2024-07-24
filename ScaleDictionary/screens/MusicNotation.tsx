@@ -1,8 +1,8 @@
 /**
- * TODO: figure out how to appropriately scale notation to fit smaller screens
+ * TODO: N/A
  */
-import { FC, useState, useEffect } from 'react'
-import { View, Image, ActivityIndicator, Dimensions } from 'react-native';
+import { useState, useEffect } from 'react'
+import { View, ActivityIndicator, Dimensions } from 'react-native';
 import axios from 'axios';
 import { SvgXml } from 'react-native-svg';
 
@@ -12,7 +12,12 @@ interface MusicNotationProps {
 }
 
 const { height, width } = Dimensions.get("window");
-const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
+/**
+ * This component renders the sheet music for the scale.
+ * It accepts the clef and notes passed in from Interface and sends them to a Node/Express backend server
+ * to build the SVG for the sheet music. 
+ */
+export default function MusicNotation({ clef, notes }: MusicNotationProps) {
     const [windowHeight, setWindowHeight] = useState<number>(height);
     const [windowWidth, setWindowWidth] = useState<number>(width);
     const [loading, setLoading] = useState<boolean>(true);
@@ -57,12 +62,24 @@ const MusicNotation: FC<MusicNotationProps> = ({ clef, notes }) => {
     if(loading) {
         return <ActivityIndicator />;
     }
+    
+    // scaling for different-sized screens
+    const svgWidth = 400;
+    const svgHeight = 300;
+    const scaleFactor = Math.min(windowWidth / svgWidth, windowHeight / svgHeight);
+    const viewBox = `0 0 ${svgWidth} ${svgHeight}`;
+    const scaledWidth = svgWidth * scaleFactor;
+    const scaledHeight = svgHeight * scaleFactor;
+    const offsetX = (windowWidth - svgWidth) / 2;
+    const offsetY = (windowHeight - svgHeight) / 64;
 
     return (
         <View>
-            <SvgXml xml={svg} width={windowWidth} height={windowWidth*(3/4)} />
+            <SvgXml xml={svg} 
+                width={scaledWidth} 
+                height={scaledHeight}
+                viewBox={viewBox} 
+                style={{ marginLeft: offsetX, marginTop: offsetY }} />
         </View>
     )
 }
-
-export default MusicNotation;

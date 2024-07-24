@@ -28,15 +28,18 @@
     "react-native-fs": "^2.20.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-paper": "^5.12.3",
+    "react-native-reanimated": "^3.14.0",
     "react-native-render-html": "^6.3.4",
     "react-native-svg": "^15.2.0",
+    "react-native-vector-icons": "^10.1.0",
     "react-native-webview": "13.8.6",
     "typescript": "~5.3.3",
     "vexflow": "^4.2.5"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
-    "@types/vexflow": "^1.2.42"
+    "@types/vexflow": "^1.2.42",
+    "react-native-global-props": "^1.1.5"
   },
   "private": true
 }

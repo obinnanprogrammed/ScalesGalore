@@ -1,3 +1,6 @@
+/**
+ * Server for rendering sheet music notation.
+ */
 const express = require('express');
 const { JSDOM } = require('jsdom');
 const { createCanvas } = require('canvas');
@@ -7,7 +10,11 @@ const app = express();
 const port = 3000;
 
 app.use(express.json());
-
+/**
+ * Accepts clef, notes, and startingOctave from MusicNotation component.
+ * Renders sheet music for scale using Vexflow.
+ * Returns SVG HTML for the sheet music as a string.
+ */
 app.post('/render', (req, res) => {
     const { clef, notes, startingOctave } = req.body;
 
@@ -15,7 +22,6 @@ app.post('/render', (req, res) => {
     const { Renderer, Formatter, Stave, StaveNote, Beam, Accidental } = Vex.Flow;
 
     global.document = window.document;
-    console.log(window.innerWidth, window.innerHeight);
     const container = window.document.getElementById("vf-container");
     const renderer = new Renderer(container, Renderer.Backends.SVG);
 
@@ -52,6 +58,7 @@ app.post('/render', (req, res) => {
     
     m1Beams.forEach((b) => b.setContext(context).draw());
     
+    // descending notes
     const descending = new Stave(stave.getX(), stave.getBottomLineY(), stave.getWidth());
     descending.setContext(context).draw();
 
@@ -71,6 +78,9 @@ app.post('/render', (req, res) => {
     Formatter.FormatAndDraw(context, oneMore, lastNote);
     
     let svg = container.innerHTML;
+    /* Vexflow sets the pointer-events for each note to "bounding-box", which is not permitted in 
+    react-native-svg. Each "bounding-box" instance is replaced with "auto" to enable SVG use by
+    react-native-svg. */
     svg = svg.replace(/pointer-events="bounding-box"/g, 'pointer-events="auto"');
     res.send(svg);
 });
