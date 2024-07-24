@@ -16,12 +16,8 @@ import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-san
 import { Audio } from 'expo-av';
 import soundFiles from '../utilities/soundImports';
 import { styles, dropdownStyles } from '../utilities/styles';
+import { RootStackParamList } from '../utilities/types';
 
-type RootStackParamList = {
-    Welcome: undefined;
-    ClefSelection: { translateY: Animated.Value };
-    Interface: { clef: string };
-};
 type InterfaceScreenNavigationProp = NavigationProp<RootStackParamList, 'Interface'>;
 type InterfaceScreenRouteProp = RouteProp<RootStackParamList, 'Interface'>;
 

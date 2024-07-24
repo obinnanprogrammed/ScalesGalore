@@ -9,12 +9,9 @@ import { useNavigation, NavigationProp, useTheme, useFocusEffect } from '@react-
 import { View, Text, Pressable, ImageBackground, Animated } from 'react-native';
 import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
 import { styles } from '../utilities/styles';
+import { RootStackParamList } from '../utilities/types';
 
-type RootStackParamList = {
-    Welcome: undefined;
-    ClefSelection: { translateY: Animated.Value };
-    Interface: { clef: string };
-};
+
 type WelcomeScreenNavigationProp = NavigationProp<RootStackParamList, 'Welcome'>;
 
 /**

@@ -3,10 +3,10 @@
  */
 import { NavigationContainer, DefaultTheme, Theme as NavigationTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Animated } from 'react-native';
 import Welcome from './screens/Welcome';
 import ClefSelection from './screens/ClefSelection';
 import Interface from './screens/Interface';
+import { RootStackParamList } from './utilities/types';
 import { registerRootComponent } from 'expo';
 
 const Theme: NavigationTheme = {
@@ -21,12 +21,6 @@ const Theme: NavigationTheme = {
     border: '#9ab7e6',  
     notification: '#98FB98'
   }
-};
-
-type RootStackParamList = {
-  Welcome: undefined;
-  ClefSelection: { translateY: Animated.Value };
-  Interface: { clef: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

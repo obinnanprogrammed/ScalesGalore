@@ -8,12 +8,8 @@ import { Dropdown } from 'react-native-element-dropdown';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
 import { styles, dropdownStyles } from '../utilities/styles';
+import { RootStackParamList } from '../utilities/types';
 
-type RootStackParamList = {
-    Welcome: undefined;
-    ClefSelection: { translateY: Animated.Value };
-    Interface: { clef: string };
-};
 
 type ClefSelectionScreenNavigationProp = NavigationProp<RootStackParamList, 'ClefSelection'>;
 type ClefSelectionScreenRouteProp = RouteProp<RootStackParamList, 'ClefSelection'>;
