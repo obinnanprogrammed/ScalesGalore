@@ -107,7 +107,7 @@ export default function Interface({ navigation, route }: Props) {
           <View style={styles.container}>
               {!submitted && 
                 <View style={styles.inner}>
-                  <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Pick your scale here!</Text>
+                  <Text style={{ fontFamily: styles.container.fontFamily, fontSize: 40, color: colors.text }}>Pick your scale here!</Text>
                   <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
                   data={notes} placeholder="Select note...." value={note} onChange={item => setNote(item.value)}>
                   </Dropdown>

@@ -15,7 +15,7 @@ const Theme: NavigationTheme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#98FB98',
-    background: '#9ab7e6',
+    background: '#5ce1e6',
     card: 'black',
     text: 'white',
     border: '#9ab7e6',  
@@ -30,7 +30,7 @@ export default function App() {
     <NavigationContainer theme={Theme}>
       <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome}></Stack.Screen>
-        <Stack.Screen options={{ headerShown: false }} name="ClefSelection" component={ClefSelection}></Stack.Screen>
+        <Stack.Screen options={{ headerShown: false, animation: 'fade' }} name="ClefSelection" component={ClefSelection}></Stack.Screen>
         <Stack.Screen options={{ headerShown: false }} name="Interface" component={Interface}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
