@@ -1,5 +1,6 @@
 /**
  * TODO: Ensure final position of title on ClefSelection matches with same on Interface
+ * Shared Element Transition: morph Go button into back button on top left
  */
 import { useState, useEffect } from 'react';
 import { NavigationProp, RouteProp, useTheme } from '@react-navigation/native';
@@ -28,7 +29,7 @@ export default function ClefSelection({ navigation, route }: Props) {
       JosefinSans_400Regular
     });
 
-    const { translateY } = route.params;
+    const { translateY, translateButton } = route.params;
     const scale = translateY.interpolate({
       inputRange: [-250, 0],
       outputRange: [0.5, 1.0],
@@ -36,12 +37,19 @@ export default function ClefSelection({ navigation, route }: Props) {
     });
 
     useEffect(() => {
-      Animated.timing(translateY, {
-        toValue: -250,
-        duration: 0,
-        useNativeDriver: true
-      }).start();
-    }, [translateY]);
+      Animated.parallel([
+        Animated.timing(translateY, {
+          toValue: -250,
+          duration: 0,
+          useNativeDriver: true
+        }),
+        Animated.timing(translateButton, {
+          toValue: 0,
+          duration: 0,
+          useNativeDriver: true
+        })
+      ]).start()
+    }, [translateY, translateButton]);
 
     if(!fontsLoaded && !fontError) {
       return null;
@@ -63,10 +71,13 @@ export default function ClefSelection({ navigation, route }: Props) {
               <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
               data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
               </Dropdown>
-              <Pressable style={[styles.button, { backgroundColor: (clef === "" ? "gray" : colors.primary) }]}
-              disabled={clef === "" ? true : false} onPress={() => { navigation.navigate("Interface", { clef: clef })}}>
-                <Text>Go</Text>
-              </Pressable>
+              <Animated.View style={{ transform: [{ translateY: translateButton }]}}>
+                <Pressable style={[styles.button, { backgroundColor: (clef === "" ? "gray" : colors.primary) }]}
+                disabled={clef === "" ? true : false} onPress={() => { navigation.navigate("Interface", { clef: clef, translateY: translateY })}}>
+                  <Text>Go</Text>
+                </Pressable>
+              </Animated.View>
+              
               <Pressable style={styles.homeButton} onPress={() => {navigation.navigate("Welcome")}}>
                 <Ionicons name="home" size={24} color={colors.primary}></Ionicons>
               </Pressable>

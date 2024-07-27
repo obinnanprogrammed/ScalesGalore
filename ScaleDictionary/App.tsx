@@ -30,8 +30,8 @@ export default function App() {
     <NavigationContainer theme={Theme}>
       <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen options={{ headerShown: false }} name="Welcome" component={Welcome}></Stack.Screen>
-        <Stack.Screen options={{ headerShown: false, animation: 'fade' }} name="ClefSelection" component={ClefSelection}></Stack.Screen>
-        <Stack.Screen options={{ headerShown: false }} name="Interface" component={Interface}></Stack.Screen>
+        <Stack.Screen options={{ headerShown: false, animation: 'none' }} name="ClefSelection" component={ClefSelection}></Stack.Screen>
+        <Stack.Screen options={{ headerShown: false, animation: 'none' }} name="Interface" component={Interface}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,8 +1,11 @@
 /**
  * TODO: Change Go! button to an icon button
  * title animation: front and center on welcome screen, move to top for clef selection and interface.
+ * make title animation seamless, though the only two viable ways to do so are either not supported or
+ * not ready for production.
  * Considering name change to Pierce the Scale; ScaleBook
  * Replace text with image of app name.
+ * Animate Go button just like title animation
  */
 import { useRef, useCallback } from 'react';
 import { useNavigation, NavigationProp, useTheme, useFocusEffect } from '@react-navigation/native';
@@ -24,8 +27,6 @@ export default function Welcome() {
       JosefinSans_400Regular
     })
 
-
-
     // title animation
     const translateY = useRef(new Animated.Value(0)).current;
     const scale = translateY.interpolate({
@@ -34,17 +35,28 @@ export default function Welcome() {
       extrapolate: "clamp"
     });
 
+    // button animation
+    const translateButtonY = useRef(new Animated.Value(0)).current;
+    
     const handlePress = () => {
-      Animated.timing(translateY, {
-        toValue: -340,
-        duration: 500,
-        useNativeDriver: true
-      }).start(() => navigation.navigate("ClefSelection", { translateY: translateY }));
+      Animated.parallel([
+        Animated.timing(translateY, {
+          toValue: -340,
+          duration: 500,
+          useNativeDriver: true
+        }),
+        Animated.timing(translateButtonY, {
+          toValue: 90,
+          duration: 500,
+          useNativeDriver: true
+        })
+      ]).start(() => navigation.navigate("ClefSelection", { translateY: translateY, translateButton: translateButtonY }));
     }
 
     useFocusEffect(useCallback(() => {
       translateY.setValue(0);
-    }, [translateY]))
+      translateButtonY.setValue(0);
+    }, [translateY, translateButtonY]))
 
     if(!fontsLoaded && !fontError) {
       return null;
@@ -56,8 +68,10 @@ export default function Welcome() {
                 style={{ fontFamily: styles.container.fontFamily, 
                 color: colors.text, fontSize: 50, 
                 transform: [{ translateY }, { scale }] }}>ScaleDictionary!</Animated.Text>
-              <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
-              onPress={handlePress}><Text>Go</Text></Pressable>
+              <Animated.View style={{ transform: [ { translateY: translateButtonY }]}}>
+                <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
+                onPress={handlePress}><Text>Go</Text></Pressable>
+              </Animated.View>
           </View>
         </ImageBackground>
     )
