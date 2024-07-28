@@ -3,7 +3,6 @@
  * make Josefin-Sans font family global so that I don't have to call it every time - doing this is a little
  * unfun so I will leave what I have as is.
  * Possibly change note selection to scroll, mode selection to buttons?
- * correct title disappearing when scale is generated (useFocusCallback?)
  */
 import { useState, useEffect } from 'react';
 import { NavigationProp, RouteProp, useTheme } from '@react-navigation/native';
@@ -67,22 +66,6 @@ export default function Interface({ navigation, route }: Props) {
       await sound.playAsync();
     }
 
-    // "animation"
-    const scale = translateY.interpolate({
-      inputRange: [-50, 0],
-      outputRange: [0.5, 1.0],
-      extrapolate: "clamp"
-    });
-
-    // useEffect for "animation"
-    useEffect(() => {
-      Animated.timing(translateY, {
-        toValue: -230,
-        duration: 0,
-        useNativeDriver: true
-      }).start();
-    }, [translateY]);
-
     // useEffect for sound
     useEffect(() => {
       return sound ? () => {
@@ -122,10 +105,8 @@ export default function Interface({ navigation, route }: Props) {
     return (
         <ImageBackground source={require("../assets/ScaleDictionary-background.png")} style={styles.background}>
           <View style={styles.container}>
-              <Animated.Text 
-                        style={{ fontFamily: styles.container.fontFamily, 
-                        color: colors.text, fontSize: 50, 
-                        transform: [{ translateY }, { scale }] }}>ScaleDictionary!</Animated.Text>
+              <Text style={{ fontFamily: styles.container.fontFamily, 
+                color: colors.text, fontSize: 25, position: "absolute", top: 28 }}>ScaleDictionary!</Text>
               {!submitted && 
                 <View style={styles.inner}>
                   <Text style={{ fontFamily: styles.container.fontFamily, fontSize: 40, color: colors.text }}>Pick your scale here!</Text>
