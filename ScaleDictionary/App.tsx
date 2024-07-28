@@ -1,5 +1,6 @@
 /**
  * TODO: animations, come up with new name for app, overhaul formatting
+ * smoothen out transition between screens
  */
 import { NavigationContainer, DefaultTheme, Theme as NavigationTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -7,7 +8,6 @@ import Welcome from './screens/Welcome';
 import ClefSelection from './screens/ClefSelection';
 import Interface from './screens/Interface';
 import { RootStackParamList } from './utilities/types';
-import { registerRootComponent } from 'expo';
 
 const Theme: NavigationTheme = {
   ...DefaultTheme,
@@ -36,6 +36,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-
-registerRootComponent(App);

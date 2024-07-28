@@ -1,11 +1,8 @@
 /**
- * TODO: Change Go! button to an icon button
- * title animation: front and center on welcome screen, move to top for clef selection and interface.
- * make title animation seamless, though the only two viable ways to do so are either not supported or
- * not ready for production.
+ * TODO: Change Go! button to an icon button (possibly)
  * Considering name change to Pierce the Scale; ScaleBook
  * Replace text with image of app name.
- * Animate Go button just like title animation
+ * change color to gray on animation start
  */
 import { useRef, useCallback } from 'react';
 import { useNavigation, NavigationProp, useTheme, useFocusEffect } from '@react-navigation/native';
@@ -37,7 +34,12 @@ export default function Welcome() {
 
     // button animation
     const translateButtonY = useRef(new Animated.Value(0)).current;
-    
+    const animateColor = useRef(new Animated.Value(0)).current;
+    const color = animateColor.interpolate({
+      inputRange: [0, 1],
+      outputRange: ["#98FB98", "gray"]
+    });
+
     const handlePress = () => {
       Animated.parallel([
         Animated.timing(translateY, {
@@ -49,6 +51,11 @@ export default function Welcome() {
           toValue: 90,
           duration: 500,
           useNativeDriver: true
+        }),
+        Animated.timing(animateColor, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: false
         })
       ]).start(() => navigation.navigate("ClefSelection", { translateY: translateY, translateButton: translateButtonY }));
     }
@@ -56,7 +63,8 @@ export default function Welcome() {
     useFocusEffect(useCallback(() => {
       translateY.setValue(0);
       translateButtonY.setValue(0);
-    }, [translateY, translateButtonY]))
+      animateColor.setValue(0);
+    }, [translateY, translateButtonY, animateColor]))
 
     if(!fontsLoaded && !fontError) {
       return null;

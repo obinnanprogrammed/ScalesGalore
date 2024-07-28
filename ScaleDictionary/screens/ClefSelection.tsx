@@ -73,7 +73,7 @@ export default function ClefSelection({ navigation, route }: Props) {
               </Dropdown>
               <Animated.View style={{ transform: [{ translateY: translateButton }]}}>
                 <Pressable style={[styles.button, { backgroundColor: (clef === "" ? "gray" : colors.primary) }]}
-                disabled={clef === "" ? true : false} onPress={() => { navigation.navigate("Interface", { clef: clef, translateY: translateY })}}>
+                disabled={clef === "" ? true : false} onPress={() => { navigation.navigate("Interface", { clef: clef })}}>
                   <Text>Go</Text>
                 </Pressable>
               </Animated.View>

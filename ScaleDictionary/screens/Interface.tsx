@@ -39,7 +39,7 @@ export default function Interface({ navigation, route }: Props) {
     const [sound, setSound] = useState<Audio.Sound | null>(null);
 
     // clef passed in from ClefSelection ( + translateY for animation )
-    const { clef, translateY } = route.params;
+    const { clef } = route.params;
 
     // theme and styling stuff
     const { colors } = useTheme();
