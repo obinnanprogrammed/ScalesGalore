@@ -1,8 +1,8 @@
 /**
  * TODO: Change Go! button to an icon button (possibly)
- * Considering name change to Pierce the Scale; ScaleBook
+ * Considering name change to Scales Galore!
  * Replace text with image of app name.
- * change color to gray on animation start
+ * change color to gray on animation start (too unfeasible, will change to something else, probably a fly off)
  */
 import { useRef, useCallback } from 'react';
 import { useNavigation, NavigationProp, useTheme, useFocusEffect } from '@react-navigation/native';
@@ -70,12 +70,12 @@ export default function Welcome() {
       return null;
     }
     return (
-        <ImageBackground source={require("../assets/ScaleDictionary-background.png")} style={styles.background}>
+        <ImageBackground source={require("../assets/ScalesGalore-background.png")} style={styles.background}>
           <View style={styles.container}>
               <Animated.Text 
                 style={{ fontFamily: styles.container.fontFamily, 
                 color: colors.text, fontSize: 50, 
-                transform: [{ translateY }, { scale }] }}>ScaleDictionary!</Animated.Text>
+                transform: [{ translateY }, { scale }] }}>ScalesGalore!</Animated.Text>
               <Animated.View style={{ transform: [ { translateY: translateButtonY }]}}>
                 <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
                 onPress={handlePress}><Text>Go</Text></Pressable>

@@ -1,6 +1,5 @@
 /**
- * TODO: Ensure final position of title on ClefSelection matches with same on Interface
- * Shared Element Transition: morph Go button into back button on top left
+ * TODO: Shared Element Transition: morph Go button into back button on top left
  */
 import { useState, useEffect } from 'react';
 import { NavigationProp, RouteProp, useTheme } from '@react-navigation/native';
@@ -61,12 +60,12 @@ export default function ClefSelection({ navigation, route }: Props) {
     ];
 
     return (
-        <ImageBackground source={require("../assets/ScaleDictionary-background.png")} style={styles.background}>
+        <ImageBackground source={require("../assets/ScalesGalore-background.png")} style={styles.background}>
           <View style={styles.container}>
               <Animated.Text 
                     style={{ fontFamily: styles.container.fontFamily, 
                     color: colors.text, fontSize: 50, 
-                    transform: [{ translateY }, { scale }] }}>ScaleDictionary!</Animated.Text>
+                    transform: [{ translateY }, { scale }] }}>ScalesGalore!</Animated.Text>
               <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text, fontSize: 40 }}>Select clef to get started!</Text>
               <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
               data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>

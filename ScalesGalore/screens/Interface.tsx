@@ -103,10 +103,10 @@ export default function Interface({ navigation, route }: Props) {
     }
 
     return (
-        <ImageBackground source={require("../assets/ScaleDictionary-background.png")} style={styles.background}>
+        <ImageBackground source={require("../assets/ScalesGalore-background.png")} style={styles.background}>
           <View style={styles.container}>
               <Text style={{ fontFamily: styles.container.fontFamily, 
-                color: colors.text, fontSize: 25, position: "absolute", top: 28 }}>ScaleDictionary!</Text>
+                color: colors.text, fontSize: 25, position: "absolute", top: 28 }}>ScalesGalore!</Text>
               {!submitted && 
                 <View style={styles.inner}>
                   <Text style={{ fontFamily: styles.container.fontFamily, fontSize: 40, color: colors.text }}>Pick your scale here!</Text>

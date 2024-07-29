@@ -62,7 +62,10 @@ app.post('/render', (req, res) => {
     const descending = new Stave(stave.getX(), stave.getBottomLineY(), stave.getWidth());
     descending.setContext(context).draw();
 
-    const secondQuarter = [createNote(notes[7], 'q', true)];
+    const secondQuarter = [createNote(notes[7], 'q', false)];
+    if(notes[7].includes("C")) {
+        currOctave--;
+    }
     const m2Group1 = [createNote(notes[6], '8', true), createNote(notes[5], '8', true)];
     const m2Group2 = [createNote(notes[4], '8', true), createNote(notes[3], '8', true), createNote(notes[2], '8', true), createNote(notes[1], '8', true)];
     const m2Notes = secondQuarter.concat(m2Group1, m2Group2);
