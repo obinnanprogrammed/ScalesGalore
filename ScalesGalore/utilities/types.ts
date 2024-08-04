@@ -1,7 +1,7 @@
-import { Animated } from 'react-native';
+import Value from 'react-native-reanimated';
 
 export type RootStackParamList = {
     Welcome: undefined;
-    ClefSelection: { translateY: Animated.Value, translateButton: Animated.Value };
+    ClefSelection: undefined;
     Interface: { clef: string };
 };

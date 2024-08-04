@@ -1,12 +1,10 @@
 /**
  * TODO: continue formatting overhaul
- * make Josefin-Sans font family global so that I don't have to call it every time - doing this is a little
- * unfun so I will leave what I have as is.
  * Possibly change note selection to scroll, mode selection to buttons?
  */
 import { useState, useEffect } from 'react';
 import { NavigationProp, RouteProp, useTheme } from '@react-navigation/native';
-import { View, Text, Pressable, ImageBackground, Animated } from 'react-native';
+import { View, Text, Pressable, ImageBackground } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MusicNotation from './MusicNotation';

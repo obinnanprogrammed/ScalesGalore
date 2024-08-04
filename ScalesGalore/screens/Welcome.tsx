@@ -1,16 +1,16 @@
 /**
  * TODO: Change Go! button to an icon button (possibly)
- * Considering name change to Scales Galore!
  * Replace text with image of app name.
  * change color to gray on animation start (too unfeasible, will change to something else, probably a fly off)
+ * Examine why TypeScript keeps throwing "error" when using runOnJS(navigation.navigate)("ClefSelection")
  */
 import { useRef, useCallback } from 'react';
 import { useNavigation, NavigationProp, useTheme, useFocusEffect } from '@react-navigation/native';
-import { View, Text, Pressable, ImageBackground, Animated } from 'react-native';
+import { View, Text, Pressable, ImageBackground } from 'react-native';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS } from 'react-native-reanimated';
 import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
 import { styles } from '../utilities/styles';
 import { RootStackParamList } from '../utilities/types';
-
 
 type WelcomeScreenNavigationProp = NavigationProp<RootStackParamList, 'Welcome'>;
 
@@ -25,46 +25,32 @@ export default function Welcome() {
     })
 
     // title animation
-    const translateY = useRef(new Animated.Value(0)).current;
-    const scale = translateY.interpolate({
-      inputRange: [-340, 0],
-      outputRange: [0.5, 1.0],
-      extrapolate: "clamp"
+    const translateY = useSharedValue(0);
+    const scale = useSharedValue(1);
+    const titleStyle = useAnimatedStyle(() => {
+      return {
+        transform: [
+          { translateY: translateY.value },
+          { scale: scale.value }
+        ]
+      };
     });
 
-    // button animation
-    const translateButtonY = useRef(new Animated.Value(0)).current;
-    const animateColor = useRef(new Animated.Value(0)).current;
-    const color = animateColor.interpolate({
-      inputRange: [0, 1],
-      outputRange: ["#98FB98", "gray"]
-    });
+    const toClefSelection = () => {
+      navigation.navigate("ClefSelection");
+    };
 
     const handlePress = () => {
-      Animated.parallel([
-        Animated.timing(translateY, {
-          toValue: -340,
-          duration: 500,
-          useNativeDriver: true
-        }),
-        Animated.timing(translateButtonY, {
-          toValue: 90,
-          duration: 500,
-          useNativeDriver: true
-        }),
-        Animated.timing(animateColor, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: false
-        })
-      ]).start(() => navigation.navigate("ClefSelection", { translateY: translateY, translateButton: translateButtonY }));
-    }
+      translateY.value = withTiming(-340, { duration: 500 });
+      scale.value = withTiming(0.5, { duration: 500 }, () => {
+        runOnJS(toClefSelection)();
+      });
+    };
 
     useFocusEffect(useCallback(() => {
-      translateY.setValue(0);
-      translateButtonY.setValue(0);
-      animateColor.setValue(0);
-    }, [translateY, translateButtonY, animateColor]))
+      translateY.value = 0;
+      scale.value = 1;
+    }, [translateY, scale]))
 
     if(!fontsLoaded && !fontError) {
       return null;
@@ -73,13 +59,10 @@ export default function Welcome() {
         <ImageBackground source={require("../assets/ScalesGalore-background.png")} style={styles.background}>
           <View style={styles.container}>
               <Animated.Text 
-                style={{ fontFamily: styles.container.fontFamily, 
-                color: colors.text, fontSize: 50, 
-                transform: [{ translateY }, { scale }] }}>ScalesGalore!</Animated.Text>
-              <Animated.View style={{ transform: [ { translateY: translateButtonY }]}}>
-                <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
+                style={[{ fontFamily: styles.container.fontFamily, 
+                color: colors.text, fontSize: 50 }, titleStyle]}>ScalesGalore!</Animated.Text>
+              <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
                 onPress={handlePress}><Text>Go</Text></Pressable>
-              </Animated.View>
           </View>
         </ImageBackground>
     )
