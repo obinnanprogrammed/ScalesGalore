@@ -26,6 +26,7 @@ export default function Welcome() {
 
     // title animation
     const translateY = useSharedValue(0);
+    const translateButton = useSharedValue(0);
     const scale = useSharedValue(1);
     const titleStyle = useAnimatedStyle(() => {
       return {
@@ -36,12 +37,21 @@ export default function Welcome() {
       };
     });
 
+    const buttonStyle = useAnimatedStyle(() => {
+      return {
+        transform: [
+          { translateY: translateButton.value }
+        ]
+      }
+    })
+
     const toClefSelection = () => {
       navigation.navigate("ClefSelection");
     };
 
     const handlePress = () => {
       translateY.value = withTiming(-340, { duration: 500 });
+      translateButton.value = withTiming(400, { duration: 500 });
       scale.value = withTiming(0.5, { duration: 500 }, () => {
         runOnJS(toClefSelection)();
       });
@@ -49,8 +59,9 @@ export default function Welcome() {
 
     useFocusEffect(useCallback(() => {
       translateY.value = 0;
+      translateButton.value = 0;
       scale.value = 1;
-    }, [translateY, scale]))
+    }, [translateY, translateButton, scale]))
 
     if(!fontsLoaded && !fontError) {
       return null;
@@ -61,8 +72,10 @@ export default function Welcome() {
               <Animated.Text 
                 style={[{ fontFamily: styles.container.fontFamily, 
                 color: colors.text, fontSize: 50 }, titleStyle]}>ScalesGalore!</Animated.Text>
+              <Animated.View style={[buttonStyle]}>
               <Pressable style={[styles.button, { backgroundColor: colors.primary }]} 
                 onPress={handlePress}><Text>Go</Text></Pressable>
+              </Animated.View>
           </View>
         </ImageBackground>
     )

@@ -1,11 +1,12 @@
 /**
  * TODO: Shared Element Transition: morph Go button into back button on top left
  * animate selection screen out when transitioning to Interface
+ * Learn how useFocusEffect works
  */
-import { useState, useEffect } from 'react';
-import { NavigationProp, RouteProp, useTheme, useNavigation } from '@react-navigation/native';
+import { useState, useCallback } from 'react';
+import { NavigationProp, useTheme, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { View, Text, Pressable, ImageBackground } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS } from 'react-native-reanimated';
 import { Dropdown } from 'react-native-element-dropdown';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
@@ -14,11 +15,6 @@ import { RootStackParamList } from '../utilities/types';
 
 
 type ClefSelectionScreenNavigationProp = NavigationProp<RootStackParamList, 'ClefSelection'>;
-type ClefSelectionScreenRouteProp = RouteProp<RootStackParamList, 'ClefSelection'>;
-type Props = {
-  navigation: ClefSelectionScreenNavigationProp,
-  route: ClefSelectionScreenRouteProp
-};
 /**
  * Clef selection component. This will be used in the first release version.
  * Subsequent releases will replace this with an instrument selection feature.
@@ -30,7 +26,7 @@ export default function ClefSelection() {
     let [fontsLoaded, fontError] = useFonts({
       JosefinSans_400Regular
     });
-    const scale = useSharedValue(0)
+    const scale = useSharedValue(0);
 
     const contentStyle = useAnimatedStyle(() => {
       return {
@@ -38,12 +34,25 @@ export default function ClefSelection() {
       };
     });
 
-    useEffect(() => {
-      scale.value = withTiming(1, { duration: 500 })
-    }, [scale]);
+    useFocusEffect(useCallback(() => {
+      scale.value = 0;
+      scale.value = withTiming(1, { duration: 500 });
+    }, [scale]))
+
+    const toInterface = () => {
+      navigation.navigate("Interface", { clef: clef });
+    }
+
+    const handlePress = () => {
+      scale.value = withTiming(0, { duration: 500 }, () => {
+        runOnJS(toInterface)();
+      })
+    }
+
     if(!fontsLoaded && !fontError) {
       return null;
     }
+
     type Data = "label" | "value";
     const options: Record<Data, string>[] = [
         { label: "Treble", value: "treble" },
@@ -65,13 +74,13 @@ export default function ClefSelection() {
               </Animated.View>
               <Animated.View style={[contentStyle]}>
                 <Pressable style={[styles.button, { backgroundColor: (clef === "" ? "gray" : colors.primary) }]}
-                disabled={clef === "" ? true : false} onPress={() => { navigation.navigate("Interface", { clef: clef })}}>
+                disabled={clef === "" ? true : false} onPress={handlePress}>
                   <Text>Go</Text>
                 </Pressable>
               </Animated.View>
 
               <Pressable style={styles.homeButton} onPress={() => {navigation.navigate("Welcome")}}>
-                <Ionicons name="home" size={24} color={colors.primary}></Ionicons>
+                <Ionicons name="home" size={48} color={colors.primary}></Ionicons>
               </Pressable>
           </View>
         </ImageBackground>

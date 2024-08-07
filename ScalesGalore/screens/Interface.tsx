@@ -129,7 +129,7 @@ export default function Interface({ navigation, route }: Props) {
                 <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Click the reset button to generate a different scale.</Text>
               </View>
               : <View style={styles.inner}>
-                  <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>{note + " " + mode}</Text>
+                  <Text style={{ fontFamily: styles.container.fontFamily, fontSize: 40, color: colors.text }}>{note + " " + mode}</Text>
                   <MusicNotation clef={clef} notes={scaleNotes} />
                   <Pressable style={[styles.button, { backgroundColor: colors.primary, margin: 4 }]} onPress={playSound}><Text>Listen!</Text></Pressable>
                   <Pressable style={[styles.button, { backgroundColor: colors.primary, margin: 4 }]} onPress={handleReset}><Text>Reset</Text></Pressable>
