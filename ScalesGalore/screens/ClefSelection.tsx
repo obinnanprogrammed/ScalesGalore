@@ -1,6 +1,6 @@
 /**
  * TODO: Shared Element Transition: morph Go button into back button on top left
- * Animate the view when transitioning from Welcome screen?
+ * animate selection screen out when transitioning to Interface
  */
 import { useState, useEffect } from 'react';
 import { NavigationProp, RouteProp, useTheme, useNavigation } from '@react-navigation/native';
@@ -41,7 +41,6 @@ export default function ClefSelection() {
     useEffect(() => {
       scale.value = withTiming(1, { duration: 500 })
     }, [scale]);
-
     if(!fontsLoaded && !fontError) {
       return null;
     }
@@ -55,17 +54,22 @@ export default function ClefSelection() {
         <ImageBackground source={require("../assets/ScalesGalore-background.png")} style={styles.background}>
           <View style={styles.container}>
               <Text style={{ fontFamily: styles.container.fontFamily, 
-                color: colors.text, fontSize: 25, position: "absolute", top: 28 }}>ScalesGalore!</Text>
-              
-              <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text, fontSize: 40 }}>Select clef to get started!</Text>
-              <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
-              data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
-              </Dropdown>
-              <Pressable style={[styles.button, { backgroundColor: (clef === "" ? "gray" : colors.primary) }]}
-              disabled={clef === "" ? true : false} onPress={() => { navigation.navigate("Interface", { clef: clef })}}>
-                <Text>Go</Text>
-              </Pressable>
-              
+                color: colors.text, fontSize: 25, position: "absolute", top: 26 }}>ScalesGalore!</Text>
+
+              <Animated.Text style={[{ fontFamily: styles.container.fontFamily, color: colors.text, 
+                fontSize: 30 }, contentStyle]}>Select clef to get started!</Animated.Text>
+              <Animated.View style={[contentStyle]}>
+                <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
+                data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
+                </Dropdown>
+              </Animated.View>
+              <Animated.View style={[contentStyle]}>
+                <Pressable style={[styles.button, { backgroundColor: (clef === "" ? "gray" : colors.primary) }]}
+                disabled={clef === "" ? true : false} onPress={() => { navigation.navigate("Interface", { clef: clef })}}>
+                  <Text>Go</Text>
+                </Pressable>
+              </Animated.View>
+
               <Pressable style={styles.homeButton} onPress={() => {navigation.navigate("Welcome")}}>
                 <Ionicons name="home" size={24} color={colors.primary}></Ionicons>
               </Pressable>
