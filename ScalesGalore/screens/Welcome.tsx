@@ -4,7 +4,7 @@
  * change color to gray on animation start (too unfeasible, will change to something else, probably a fly off)
  * Examine why TypeScript keeps throwing "error" when using runOnJS(navigation.navigate)("ClefSelection")
  */
-import { useRef, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useNavigation, NavigationProp, useTheme, useFocusEffect } from '@react-navigation/native';
 import { View, Text, Pressable, ImageBackground } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, runOnJS } from 'react-native-reanimated';
@@ -37,6 +37,7 @@ export default function Welcome() {
       };
     });
 
+    // button animation
     const buttonStyle = useAnimatedStyle(() => {
       return {
         transform: [
@@ -49,6 +50,7 @@ export default function Welcome() {
       navigation.navigate("ClefSelection");
     };
 
+    // animating + navigating on button press
     const handlePress = () => {
       translateY.value = withTiming(-340, { duration: 500 });
       translateButton.value = withTiming(400, { duration: 500 });

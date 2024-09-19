@@ -1,6 +1,5 @@
 /**
  * TODO: Shared Element Transition: morph Go button into back button on top left
- * animate selection screen out when transitioning to Interface
  * Learn how useFocusEffect works
  */
 import { useState, useCallback } from 'react';
@@ -28,6 +27,7 @@ export default function ClefSelection() {
     });
     const scale = useSharedValue(0);
 
+    // magnify content when transitioning from Welcome
     const contentStyle = useAnimatedStyle(() => {
       return {
         transform: [{ scale: scale.value }]
@@ -43,6 +43,7 @@ export default function ClefSelection() {
       navigation.navigate("Interface", { clef: clef });
     }
 
+    // scale down, transition to main interface!
     const handlePress = () => {
       scale.value = withTiming(0, { duration: 500 }, () => {
         runOnJS(toInterface)();
@@ -53,6 +54,7 @@ export default function ClefSelection() {
       return null;
     }
 
+    // clef selection options
     type Data = "label" | "value";
     const options: Record<Data, string>[] = [
         { label: "Treble", value: "treble" },

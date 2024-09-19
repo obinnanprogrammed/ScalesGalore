@@ -1,10 +1,10 @@
 /**
- * TODO: continue formatting overhaul
- * Possibly change note selection to scroll, mode selection to buttons?
+ * TODO: implement transition animation (ClefSelection -> here, prompt -> scale rendering)
  */
-import { useState, useEffect } from 'react';
-import { NavigationProp, RouteProp, useTheme } from '@react-navigation/native';
+import { useState, useEffect, useCallback } from 'react';
+import { NavigationProp, RouteProp, useTheme, useFocusEffect } from '@react-navigation/native';
 import { View, Text, Pressable, ImageBackground } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Dropdown } from 'react-native-element-dropdown';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MusicNotation from './MusicNotation';
@@ -16,15 +16,15 @@ import soundFiles from '../utilities/soundImports';
 import { styles, dropdownStyles } from '../utilities/styles';
 import { RootStackParamList } from '../utilities/types';
 
+// prop types
 type InterfaceScreenNavigationProp = NavigationProp<RootStackParamList, 'Interface'>;
 type InterfaceScreenRouteProp = RouteProp<RootStackParamList, 'Interface'>;
-
 type Props = {
   navigation: InterfaceScreenNavigationProp,
   route: InterfaceScreenRouteProp
 };
 
-type SoundFiles = Record<string, any>;
+type SoundFiles = Record<string, number>;
 /**
  * Main interface component.
  */
@@ -36,7 +36,7 @@ export default function Interface({ navigation, route }: Props) {
     const [scaleNotes, setScaleNotes] = useState<string[]>([]);
     const [sound, setSound] = useState<Audio.Sound | null>(null);
 
-    // clef passed in from ClefSelection ( + translateY for animation )
+    // clef passed in from ClefSelection
     const { clef } = route.params;
 
     // theme and styling stuff
@@ -45,8 +45,18 @@ export default function Interface({ navigation, route }: Props) {
     let [fontsLoaded, fontError] = useFonts({
       JosefinSans_400Regular
     })
-
-    // sound stuff
+    
+    const scale = useSharedValue(0);
+    const contentStyle = useAnimatedStyle(() => {
+      return {
+        transform: [{ scale: scale.value }]
+      };
+    });
+    useFocusEffect(useCallback(() => {
+      scale.value = 0;
+      scale.value = withTiming(1, { duration: 500 });
+    }, [scale]))
+    // playing sound
     async function playSound() {
       const sFiles: SoundFiles = soundFiles;
       const soundKey = `${note}-${mode}-${clef}`;
@@ -110,15 +120,21 @@ export default function Interface({ navigation, route }: Props) {
                 color: colors.text, fontSize: 25, position: "absolute", top: 26 }}>ScalesGalore!</Text>
               {!submitted && 
                 <View style={styles.inner}>
-                  <Text style={{ fontFamily: styles.container.fontFamily, fontSize: 40, color: colors.text }}>Pick your scale here!</Text>
-                  <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
-                  data={notes} placeholder="Select note...." value={note} onChange={item => setNote(item.value)}>
-                  </Dropdown>
-                  <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
-                  data={modes} placeholder="Select mode...." value={mode} onChange={item => setMode(item.value)}>
-                  </Dropdown>
-                  <Pressable style={[styles.button, { backgroundColor: (note === "" || mode === "" ? "gray" : colors.primary) }]} 
-                    disabled={note === "" || mode === "" ? true : false } onPress={handleSubmit}><Text>Submit</Text></Pressable>
+                  <Animated.Text style={[{ fontFamily: styles.container.fontFamily, fontSize: 40, color: colors.text }, contentStyle]}>Pick your scale here!</Animated.Text>
+                  <Animated.View style={[contentStyle]}>
+                    <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
+                    data={notes} placeholder="Select note...." value={note} onChange={item => setNote(item.value)}>
+                    </Dropdown>
+                  </Animated.View>
+                  <Animated.View style={[contentStyle]}>
+                    <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value" 
+                    data={modes} placeholder="Select mode...." value={mode} onChange={item => setMode(item.value)}>
+                    </Dropdown>
+                  </Animated.View>
+                  <Animated.View style={[contentStyle]}>
+                    <Pressable style={[styles.button, { backgroundColor: (note === "" || mode === "" ? "gray" : colors.primary) }]} 
+                      disabled={note === "" || mode === "" ? true : false } onPress={handleSubmit}><Text>Submit</Text></Pressable>
+                  </Animated.View>
                 </View>}
 
               {submitted && (scaleNotes.length === 0 ?
