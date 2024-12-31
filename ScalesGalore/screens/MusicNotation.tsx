@@ -33,7 +33,7 @@ export default function MusicNotation({ clef, notes }: MusicNotationProps) {
     // in bass clef, these will go too far below the staff (restriction to be removed and reworked later)
     let altOctaveKeys: string[] = ["Db", "D", "D#", "Eb"]; 
 
-    // setting octave
+    // setting octave (will be reworked)
     let currOctave: number = (clef === "treble" ? 4 : 2);
     // resetting for bass clef Db, D, Eb to avoid below the staff notes
     if(clef === "bass" && altOctaveKeys.includes(notes[0])) {

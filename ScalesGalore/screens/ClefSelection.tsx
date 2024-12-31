@@ -1,6 +1,6 @@
 /**
- * TODO: Shared Element Transition: morph Go button into back button on top left
- * Learn how useFocusEffect works
+ * TODO: change out clef selection for instrument selection
+ * New file for instrument to clef, octave, key
  */
 import { useState, useCallback } from 'react';
 import { NavigationProp, useTheme, useNavigation, useFocusEffect } from '@react-navigation/native';

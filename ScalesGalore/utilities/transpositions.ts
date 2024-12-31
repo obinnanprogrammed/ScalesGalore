@@ -1,8 +1,8 @@
 /**
  * Transposition map
  * Maps key of instrument to map of key in concert pitch to key for instrument
- * Example: Bb Trumpet -> F (concert pitch) -> G (Bb trumpet pitch) (Bb trumpet sounds one whole step lower than written)
- * Example: Eb Alto Saxophone -> Ab (concert pitch) -> F (Eb alto sax pitch) (Eb alto sax sounds a major sixth lower than written)
+ * Example: Bb Trumpet: F (concert pitch) -> G (Bb trumpet pitch) (Bb trumpet sounds one whole step lower than written)
+ * Example: Eb Alto Saxophone: Ab (concert pitch) -> F (Eb alto sax pitch) (Eb alto sax sounds a major sixth lower than written)
  * Currently limited to most common keys of instruments (minus C, as they don't transpose), plus D and G for support
  * of legacy instruments (G bugles, D trumpet, D clarinet)
  */
