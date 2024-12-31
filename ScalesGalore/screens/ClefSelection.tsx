@@ -17,6 +17,7 @@ type ClefSelectionScreenNavigationProp = NavigationProp<RootStackParamList, 'Cle
 /**
  * Clef selection component. This will be used in the first release version.
  * Subsequent releases will replace this with an instrument selection feature.
+ * Testing, testing, 1, 2, 3...preparing for instrument selection.
  */
 export default function ClefSelection() {
     const navigation = useNavigation<ClefSelectionScreenNavigationProp>();
