@@ -44,7 +44,7 @@ export default function MusicNotation({ clef, notes }: MusicNotationProps) {
         const fetchData = async () => {
             try {
                 // 10.0.0.126 for home home, 10.30.25.15 for apartment, 10.244.220.28 for school
-                const response = await axios.post("http://10.30.25.15:3000/render", {
+                const response = await axios.post("http://10.0.0.126:3000/render", {
                     clef: clef,
                     notes: notes,
                     startingOctave: currOctave

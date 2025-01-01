@@ -16,6 +16,7 @@ import { Audio } from 'expo-av';
 import soundFiles from '../utilities/soundImports';
 import { styles, dropdownStyles } from '../utilities/styles';
 import { RootStackParamList } from '../utilities/types';
+import { instruments } from '../utilities/instrumentInfo';
 
 // prop types
 type InterfaceScreenNavigationProp = NavigationProp<RootStackParamList, 'Interface'>;
@@ -24,7 +25,6 @@ type Props = {
   navigation: InterfaceScreenNavigationProp,
   route: InterfaceScreenRouteProp
 };
-
 type SoundFiles = Record<string, number>;
 /**
  * Main interface component.
@@ -39,7 +39,10 @@ export default function Interface({ navigation, route }: Props) {
 
     // instrument passed in from ClefSelection
     const { instrument } = route.params;
-
+    const clef = instruments[instrument]["clef"] as string;
+    //const key = instruments[instrument]["key"] as string;
+    //const octave = instruments[instrument]["octave"] as number;
+    
     // theme and styling stuff
     const { colors } = useTheme();
     
