@@ -1,6 +1,7 @@
 /**
- * TODO: animations, come up with new name for app, overhaul formatting
+ * TODO: animations, overhaul formatting
  * smoothen out transition between screens
+ * 12/31/24: CURRENTLY ON BRANCH instrument-selection
  */
 import { NavigationContainer, DefaultTheme, Theme as NavigationTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
