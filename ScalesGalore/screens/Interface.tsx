@@ -1,5 +1,6 @@
 /**
  * TODO: implement transition animation (ClefSelection -> here, prompt -> scale rendering)
+ * Also work out clef and stuff
  */
 import { useState, useEffect, useCallback } from 'react';
 import { NavigationProp, RouteProp, useTheme, useFocusEffect } from '@react-navigation/native';
@@ -36,8 +37,8 @@ export default function Interface({ navigation, route }: Props) {
     const [scaleNotes, setScaleNotes] = useState<string[]>([]);
     const [sound, setSound] = useState<Audio.Sound | null>(null);
 
-    // clef passed in from ClefSelection
-    const { clef } = route.params;
+    // instrument passed in from ClefSelection
+    const { instrument } = route.params;
 
     // theme and styling stuff
     const { colors } = useTheme();

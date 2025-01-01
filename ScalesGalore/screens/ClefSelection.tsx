@@ -11,7 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
 import { styles, dropdownStyles } from '../utilities/styles';
 import { RootStackParamList } from '../utilities/types';
-
+import { options } from '../utilities/instrumentInfo';
 
 type ClefSelectionScreenNavigationProp = NavigationProp<RootStackParamList, 'ClefSelection'>;
 /**
@@ -21,7 +21,7 @@ type ClefSelectionScreenNavigationProp = NavigationProp<RootStackParamList, 'Cle
  */
 export default function ClefSelection() {
     const navigation = useNavigation<ClefSelectionScreenNavigationProp>();
-    const [clef, setClef] = useState("");
+    const [instrument, setInstrument] = useState("");
     const { colors } = useTheme();
     let [fontsLoaded, fontError] = useFonts({
       JosefinSans_400Regular
@@ -41,7 +41,8 @@ export default function ClefSelection() {
     }, [scale]))
 
     const toInterface = () => {
-      navigation.navigate("Interface", { clef: clef });
+      // will change for instrument
+      navigation.navigate("Interface", { instrument: instrument });
     }
 
     // scale down, transition to main interface!
@@ -55,13 +56,6 @@ export default function ClefSelection() {
       return null;
     }
 
-    // clef selection options
-    type Data = "label" | "value";
-    const options: Record<Data, string>[] = [
-        { label: "Treble", value: "treble" },
-        { label: "Bass", value: "bass" }
-    ];
-
     return (
         <ImageBackground source={require("../assets/ScalesGalore-background.png")} style={styles.background}>
           <View style={styles.container}>
@@ -72,12 +66,12 @@ export default function ClefSelection() {
                 fontSize: 30 }, contentStyle]}>Select clef to get started!</Animated.Text>
               <Animated.View style={[contentStyle]}>
                 <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
-                data={options} placeholder="Select clef...." value={clef} onChange={item => setClef(item.value)}>
+                data={options} placeholder="Select instrument...." value={instrument} onChange={item => setInstrument(item.value)}>
                 </Dropdown>
               </Animated.View>
               <Animated.View style={[contentStyle]}>
-                <Pressable style={[styles.button, { backgroundColor: (clef === "" ? "gray" : colors.primary) }]}
-                disabled={clef === "" ? true : false} onPress={handlePress}>
+                <Pressable style={[styles.button, { backgroundColor: (instrument === "" ? "gray" : colors.primary) }]}
+                disabled={instrument === "" ? true : false} onPress={handlePress}>
                   <Text>Go</Text>
                 </Pressable>
               </Animated.View>
