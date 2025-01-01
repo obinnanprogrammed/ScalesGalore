@@ -1,7 +1,8 @@
 /**
  * TODO: animations, overhaul formatting
  * smoothen out transition between screens
- * 12/31/24: CURRENTLY ON BRANCH instrument-selection
+ * 12/31/24: ON BRANCH main
+ * REFACTOR ENTIRE PROJECT
  */
 import { NavigationContainer, DefaultTheme, Theme as NavigationTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
