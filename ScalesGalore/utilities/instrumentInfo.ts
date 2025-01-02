@@ -31,7 +31,7 @@ export const instruments: Record<string, Record<key, val>> = {
     "clarinet-bb": {
         clef: "treble",
         key: "Bb",
-        octave: 3
+        octave: 4
     },
     "clarinet-bass": {
         clef: "treble",

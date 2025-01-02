@@ -1,6 +1,5 @@
 /**
- * TODO: implement transition animation (ClefSelection -> here, prompt -> scale rendering)
- * Also work out clef and stuff
+ * TODO: implement transition animation (prompt -> scale rendering)
  */
 import { useState, useEffect, useCallback } from 'react';
 import { NavigationProp, RouteProp, useTheme, useFocusEffect } from '@react-navigation/native';
@@ -17,6 +16,7 @@ import soundFiles from '../utilities/soundImports';
 import { styles, dropdownStyles } from '../utilities/styles';
 import { RootStackParamList } from '../utilities/types';
 import { instruments } from '../utilities/instrumentInfo';
+import { transpositions } from '../utilities/transpositions';
 
 // prop types
 type InterfaceScreenNavigationProp = NavigationProp<RootStackParamList, 'Interface'>;
@@ -40,8 +40,8 @@ export default function Interface({ navigation, route }: Props) {
     // instrument passed in from ClefSelection
     const { instrument } = route.params;
     const clef = instruments[instrument]["clef"] as string;
-    //const key = instruments[instrument]["key"] as string;
-    //const octave = instruments[instrument]["octave"] as number;
+    const key = instruments[instrument]["key"] as string;
+    const octave = instruments[instrument]["octave"] as number;
     
     // theme and styling stuff
     const { colors } = useTheme();
@@ -94,15 +94,18 @@ export default function Interface({ navigation, route }: Props) {
     // submission handling
     const handleSubmit = () => {
       setSubmitted(true);
+      
+      const transposedNote : string = key === "C" ? note : transpositions[key][note];
       if(mode === "Major") {
-        if((note + " " + mode) in majorScales) {
-          setScaleNotes(majorScales[note + " " + mode]);
+        if((transposedNote + " " + mode) in majorScales) {
+          setScaleNotes(majorScales[transposedNote + " " + mode]);
         }
       } else if(mode === "Minor") {
-        if((note + " " + mode) in minorScales) {
-          setScaleNotes(minorScales[note + " " + mode]);
+        if((transposedNote + " " + mode) in minorScales) {
+          setScaleNotes(minorScales[transposedNote + " " + mode]);
         }
       }
+      
     }
     
     // resetting parameters
@@ -143,14 +146,14 @@ export default function Interface({ navigation, route }: Props) {
 
               {submitted && (scaleNotes.length === 0 ?
               <View style={styles.inner}>
-                <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>This scale is impractical!</Text>
+                <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>This scale is impractical for your instrument!</Text>
                 <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>It likely contains double flats or double sharps.</Text>
                 <Pressable style={[styles.button, { backgroundColor: colors.primary, margin: 4 }]} onPress={handleReset}><Text>Reset</Text></Pressable>
                 <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Click the reset button to generate a different scale.</Text>
               </View>
               : <View style={styles.inner}>
-                  <Text style={{ fontFamily: styles.container.fontFamily, fontSize: 40, color: colors.text }}>{note + " " + mode}</Text>
-                  <MusicNotation clef={clef} notes={scaleNotes} />
+                  <Text style={{ fontFamily: styles.container.fontFamily, fontSize: 40, color: colors.text }}>{"Concert " + note + " " + mode}</Text>
+                  <MusicNotation clef={clef} octave={octave} notes={scaleNotes} />
                   <Pressable style={[styles.button, { backgroundColor: colors.primary, margin: 4 }]} onPress={playSound}><Text>Listen!</Text></Pressable>
                   <Pressable style={[styles.button, { backgroundColor: colors.primary, margin: 4 }]} onPress={handleReset}><Text>Reset</Text></Pressable>
                   <Text style={{ fontFamily: styles.container.fontFamily, color: colors.text }}>Click the reset button to generate a different scale.</Text>

@@ -1,6 +1,7 @@
 /**
  * TODO: change out clef selection for instrument selection
  * New file for instrument to clef, octave, key
+ * ISSUE: Response issues with drop down
  */
 import { useState, useCallback } from 'react';
 import { NavigationProp, useTheme, useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -63,7 +64,7 @@ export default function ClefSelection() {
                 color: colors.text, fontSize: 25, position: "absolute", top: 26 }}>ScalesGalore!</Text>
 
               <Animated.Text style={[{ fontFamily: styles.container.fontFamily, color: colors.text, 
-                fontSize: 30 }, contentStyle]}>Select clef to get started!</Animated.Text>
+                fontSize: 25 }, contentStyle]}>Select instrument to get started!</Animated.Text>
               <Animated.View style={[contentStyle]}>
                 <Dropdown style={dropdownStyles.dropdown} maxHeight={150} labelField="label" valueField="value"
                 data={options} placeholder="Select instrument...." value={instrument} onChange={item => setInstrument(item.value)}>

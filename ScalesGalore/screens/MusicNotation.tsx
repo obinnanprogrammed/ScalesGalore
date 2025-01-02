@@ -1,5 +1,5 @@
 /**
- * TODO: N/A
+ * TODO: Might need to alter starting octave depending on instrument and scale (e.g. tuba on anything beyond F scales)
  */
 import { useState, useEffect } from 'react'
 import { View, ActivityIndicator, Dimensions } from 'react-native';
@@ -8,6 +8,7 @@ import { SvgXml } from 'react-native-svg';
 
 interface MusicNotationProps {
     clef: string,
+    octave: number,
     notes: string[]
 }
 
@@ -17,7 +18,7 @@ const { height, width } = Dimensions.get("window");
  * It accepts the clef and notes passed in from Interface and sends them to a Node/Express backend server
  * to build the SVG for the sheet music. 
  */
-export default function MusicNotation({ clef, notes }: MusicNotationProps) {
+export default function MusicNotation({ clef, octave, notes }: MusicNotationProps) {
     const [windowHeight, setWindowHeight] = useState<number>(height);
     const [windowWidth, setWindowWidth] = useState<number>(width);
     const [loading, setLoading] = useState<boolean>(true);
@@ -30,15 +31,6 @@ export default function MusicNotation({ clef, notes }: MusicNotationProps) {
         return () => dimChange?.remove();
     });
     
-    // in bass clef, these will go too far below the staff (restriction to be removed and reworked later)
-    let altOctaveKeys: string[] = ["Db", "D", "D#", "Eb"]; 
-
-    // setting octave (will be reworked)
-    let currOctave: number = (clef === "treble" ? 4 : 2);
-    // resetting for bass clef Db, D, Eb to avoid below the staff notes
-    if(clef === "bass" && altOctaveKeys.includes(notes[0])) {
-        currOctave = 3;
-    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -47,7 +39,7 @@ export default function MusicNotation({ clef, notes }: MusicNotationProps) {
                 const response = await axios.post("http://10.0.0.126:3000/render", {
                     clef: clef,
                     notes: notes,
-                    startingOctave: currOctave
+                    startingOctave: octave
                 });
                 setSvg(response.data);
                 setLoading(false);
